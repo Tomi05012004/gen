@@ -864,7 +864,7 @@ EOT;
 /// Fussbereich
 echo <<<EOT
 		<div id = 'foot'>
-			<div style="color: white; padding-top: 20px;" class = 'headTitl'>3D Autoaufkleber, Chrombuchstaben &  Firmenlogo-Herstellung individuell</div>
+			<div style="color: #ffffff; padding-top: 20px;" class = 'headTitl'>3D Autoaufkleber, Chrombuchstaben &  Firmenlogo-Herstellung individuell</div>
 			<p>
 EOT;
 if($mobi)
@@ -874,7 +874,7 @@ echo <<<EOT
 	<div>
 		<p style = "/* text-align: justify; padding-right: 20px; */">Die verchromte Beschriftung ist oben gewölbt (konvex), die rückseitige Klebefläche ist aber eine gerade Fläche.</p>
 		<p style = "/* text-align: justify; padding-right: 20px; padding-left: 20px; */">Hier können Sie nur glänzende CHROM-Schrift bestellen, direkt und schnell.</p>
-		<p style = "padding: 0 0 8px 0;/* text-align: justify; padding-left: 20px; */">Alle anderen Größen und Farben bekommen Sie in unserem <a style=" color: white;" href = 'http://www.chrombeschriftung.de' target = '_self'>MBD-ChromShop</a> unter "Einzelbuchstaben kaufen".</p>
+		<p style = "padding: 0 0 8px 0;/* text-align: justify; padding-left: 20px; */">Alle anderen Größen und Farben bekommen Sie in unserem <a style=" color: #ffffff;" href = 'http://www.chrombeschriftung.de' target = '_self'>MBD-ChromShop</a> unter "Einzelbuchstaben kaufen".</p>
 		<p style = "padding: 0 0 8px 0;/* text-align: justify; padding-right: 20px; */">Der Warenkorb bleibt leer.</p>
 		<p style = "padding: 0 0 8px 0;/* text-align: justify; padding-right: 20px; padding-left: 20px; */">Lieferzeit ca. 2 Werktage</p>
 		<p style = "padding: 0 0 8px 0;/* text-align: justify; padding-right: 20px; padding-left: 20px; */">Versand ist <u>kostenlos</u> in Deutschland<br>Ins Ausland kostet es 6,90 €</p>
@@ -882,7 +882,7 @@ echo <<<EOT
 		<p style = "/* text-align: justify; padding-right: 20px; */">Anbringung auf Trägerfolie bedeutet:</p>
 		<p style = "/* text-align: justify; padding-right: 20px; padding-left: 20px; */">Erleichtern Sie sich daß Aufkleben Ihrer Schrift durch unseren Trägerfolien-Service. Wir übertragen Ihren Schriftzug so auf eine Hilfsträgerfolie daß Sie ihn leicht, gleichmäßig und gerade überall aufgeklebt werden können.</p>
 		<p style = "padding: 0 0 8px 0;/* text-align: justify; padding-left: 20px; */">Ohne Anbringung auf Trägerfolie, bekommen Sie die eingegebenen Buchstaben einzeln in Polybeutel geliefert!</p>
-		<p style = "padding: 0 0 8px 0;/* padding-right: 20px; padding-left: 20px; */"><a style=" color: white;" href = 'http://www.chrombeschriftung.de' target = '_self'>Hier geht es zurück zum MBD-ChromShop</a></p><p><a style=" color: white;" href="https://www.chrombeschriftung.de/epages/61026690.sf/de_DE/?ObjectPath=/Shops/61026690/Categories/PrivacyPolicy" target = '_blank'>Datenschutzerklärung</a></p>
+		<p style = "padding: 0 0 8px 0;/* padding-right: 20px; padding-left: 20px; */"><a style=" color: #ffffff;" href = 'http://www.chrombeschriftung.de' target = '_self'>Hier geht es zurück zum MBD-ChromShop</a></p><p><a style=" color: #ffffff;" href="https://www.chrombeschriftung.de/epages/61026690.sf/de_DE/?ObjectPath=/Shops/61026690/Categories/PrivacyPolicy" target = '_blank'>Datenschutzerklärung</a></p>
 	</div>
 	
 EOT;
@@ -901,7 +901,7 @@ else
 						<p style="text-align: justify; padding-right: 20px; padding-left: 20px;">Hier können Sie nur glänzende CHROM-Schrift bestellen, direkt und schnell.</p>
 					</td>
 					<td style = "vertical-align: top width: 318px;">
-						<p style="text-align: justify; padding-left: 20px;">Alle anderen Größen und Farben bekommen Sie in unserem <a style=" color: white;" href = 'http://www.chrombeschriftung.de' target = '_self'>MBD-ChromShop</a> unter "Einzelbuchstaben kaufen".</p>
+						<p style="text-align: justify; padding-left: 20px;">Alle anderen Größen und Farben bekommen Sie in unserem <a style=" color: #ffffff;" href = 'http://www.chrombeschriftung.de' target = '_self'>MBD-ChromShop</a> unter "Einzelbuchstaben kaufen".</p>
 					</td>
 					
 				</tr>	
@@ -919,7 +919,7 @@ else
 						<p style="text-align: justify; padding-right: 20px; padding-left: 20px;">Versand ist <u>kostenlos</u> in Deutschland<br>Ins Ausland kostet es 6,90 €</p>
 					</td>
 					<td style = "vertical-align: top; width: 318px;">
-						<p style=" padding-right: 20px; padding-left: 20px;"><a style=" color: white;" href = 'http://www.chrombeschriftung.de' target = '_self'>Hier geht es zurück zum MBD-ChromShop</a></p><p><a style=" color: white;" href="https://www.chrombeschriftung.de/epages/61026690.sf/de_DE/?ObjectPath=/Shops/61026690/Categories/PrivacyPolicy" target = '_blank'>Datenschutzerklärung</a></p>
+						<p style=" padding-right: 20px; padding-left: 20px;"><a style=" color: #ffffff;" href = 'http://www.chrombeschriftung.de' target = '_self'>Hier geht es zurück zum MBD-ChromShop</a></p><p><a style=" color: #ffffff;" href="https://www.chrombeschriftung.de/epages/61026690.sf/de_DE/?ObjectPath=/Shops/61026690/Categories/PrivacyPolicy" target = '_blank'>Datenschutzerklärung</a></p>
 					</td>
 				</tr>
 				</table>
