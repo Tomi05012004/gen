@@ -953,7 +953,7 @@ EOT;*/
 
 
 		/// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-		$urlChain = array_slice(explode("/", (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on" || $_SERVER["SERVER_PORT"] == 443 ? "https://" : "http://") . $_SERVER["SERVER_NAME"] . $_SERVER["PHP_SELF"]), 0, -1);
+		$urlChain = array_slice(explode("/", (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on" || ($_SERVER["SERVER_PORT"] ?? 0) == 443 ? "https://" : "http://") . ($_SERVER["SERVER_NAME"] ?? "") . ($_SERVER["PHP_SELF"] ?? "")), 0, -1);
         $urlChain[] = "..";
         $urlChain[] = "Portal";
         $urlChain[] = "put.php";
@@ -1167,9 +1167,9 @@ EOT;*/
 			/// Währung
 			$paypParaList["currency_code"]  = "EUR";
 			/// Erfolgsurl
-			$paypParaList["return"]			= "http://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"] . "&pay=suc";
+			$paypParaList["return"]			= "http://" . ($_SERVER["HTTP_HOST"] ?? "") . ($_SERVER["REQUEST_URI"] ?? "") . "&pay=suc";
 			/// Abbruchsurl
-			$paypParaList["cancel_return"] 	= "http://" . $_SERVER["HTTP_HOST"] . strtok($_SERVER["REQUEST_URI"], "?");
+			$paypParaList["cancel_return"] 	= "http://" . ($_SERVER["HTTP_HOST"] ?? "") . strtok(($_SERVER["REQUEST_URI"] ?? ""), "?");
 
 			echo "<!DOCTYPE html><html>";
 			echo "<head><script>window.onload = function(){document.getElementById('form').submit();}</script></head>";
