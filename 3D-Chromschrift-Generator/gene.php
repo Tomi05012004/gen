@@ -45,9 +45,24 @@ function sanitize_input($data) {
 	return htmlspecialchars(trim($data), ENT_QUOTES, 'UTF-8');
 }
 
-/// Email sanitization function
+/// Email validation and sanitization function
 function sanitize_email($email) {
-	return filter_var(trim($email), FILTER_SANITIZE_EMAIL);
+	$email = trim($email);
+	// Validate email format
+	if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+		return $email;
+	}
+	return '';
+}
+
+/// Boolean sanitization function
+function sanitize_boolean($value) {
+	return filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ? 'true' : 'false';
+}
+
+/// Numeric sanitization function
+function sanitize_numeric($value) {
+	return filter_var($value, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 }
 
 /// verarbete POST Daten
@@ -61,14 +76,14 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 			conf :: ediItem(intval($_POST["posi"]), "font", sanitize_input($_POST["font"]));
 			conf :: ediItem(intval($_POST["posi"]), "text", sanitize_input($_POST["text"]));
 			conf :: ediItem(intval($_POST["posi"]), "char", sanitize_input($_POST["char"]));
-			conf :: ediItem(intval($_POST["posi"]), "foil", $_POST["foil"]);
-			conf :: ediItem(intval($_POST["posi"]), "true", $_POST["true"]);
-			conf :: ediItem(intval($_POST["posi"]), "foilLength", $_POST["leng"]);
+			conf :: ediItem(intval($_POST["posi"]), "foil", sanitize_boolean($_POST["foil"]));
+			conf :: ediItem(intval($_POST["posi"]), "true", sanitize_boolean($_POST["true"]));
+			conf :: ediItem(intval($_POST["posi"]), "foilLength", sanitize_numeric($_POST["leng"]));
 		}
 		else
 		{
-			settype($_POST["foil"], "boolean");
-			conf :: addItem(sanitize_input($_POST["font"]), sanitize_input($_POST["text"]), sanitize_input($_POST["char"]), $_POST["foil"], $_POST["true"], $_POST["leng"]);
+			$foil_value = sanitize_boolean($_POST["foil"]) === 'true';
+			conf :: addItem(sanitize_input($_POST["font"]), sanitize_input($_POST["text"]), sanitize_input($_POST["char"]), $foil_value, sanitize_boolean($_POST["true"]), sanitize_numeric($_POST["leng"]));
 		}
 		
 		/// leite an sich selbst weiter (um Informationsdoppelsenden zu vermeiden)
