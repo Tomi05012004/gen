@@ -322,6 +322,7 @@ echo <<<EOT
 	<head>
 		<!-- Meta -->
 		<meta charset = 'utf-8'>
+		<link rel="icon" type="image/x-icon" href="favicon.ico">
 EOT;
 
 /// wenn Mobilgerät sende zusatz Metainformation
