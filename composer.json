@@ -1,0 +1,14 @@
+{
+    "name": "tomi05012004/gen",
+    "description": "3D Chrome Text Generator",
+    "type": "project",
+    "require": {
+        "php": ">=7.0.0 <8.0.0"
+    },
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Tomi05012004"
+        }
+    ]
+}
