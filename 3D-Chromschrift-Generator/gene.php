@@ -186,13 +186,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 		}
 		
 		// Lese aktuellen Zählerstand
-		$fileSize = filesize($counterFile);
-		if ($fileSize > 0) {
-			$jsonContent = fread($fp, $fileSize);
+		$fileStat = fstat($fp);
+		if ($fileStat !== false && $fileStat['size'] > 0) {
+			$jsonContent = fread($fp, $fileStat['size']);
 			if ($jsonContent !== false && !empty($jsonContent)) {
 				$data = json_decode($jsonContent, true);
-				if (json_last_error() === JSON_ERROR_NONE && isset($data['count'])) {
-					$count = intval($data['count']);
+				if (json_last_error() === JSON_ERROR_NONE && isset($data['counter'])) {
+					$count = intval($data['counter']);
 				} else {
 					error_log("JSON-Dekodierungsfehler in Counter-Datei: " . json_last_error_msg());
 					flock($fp, LOCK_UN);
@@ -206,7 +206,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 		$count++;
 		
 		// Speichern mit atomarer Operation
-		$newData = json_encode(['count' => $count]);
+		$newData = json_encode(['counter' => $count]);
 		if ($newData === false) {
 			error_log("Fehler beim JSON-Kodieren des Counter-Werts: " . json_last_error_msg());
 			flock($fp, LOCK_UN);
