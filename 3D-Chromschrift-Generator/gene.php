@@ -23,6 +23,7 @@ $version = 3;
 // Define order counter file path
 define('ORDER_COUNTER_FILE', 'PHP/order_counter.json');
 define('ORDER_ERROR_MESSAGE', '<h3>Es ist ein Fehler beim Erstellen der Bestellnummer aufgetreten. Bitte versuchen Sie es später erneut oder kontaktieren Sie unseren Support.</h3>');
+define('INITIAL_ORDER_COUNTER', 1000);
 
 conf :: init();
 /// prüfe ob Mobilgerät
@@ -174,8 +175,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 		conf :: setUserData($firm, $fnam, $lnam, $stre, $hous, $post, $city, $landData["LAND"], $phon, $emai, $comm, $paym);
 		
 		/// Auftragsnummer generieren
-		$counter = 1000; // Standardwert
-		$orderID = "";
+		$counter = INITIAL_ORDER_COUNTER;
 		
 		// Öffne Datei mit exklusivem Lock für atomare Read-Modify-Write Operation
 		$fp = fopen(ORDER_COUNTER_FILE, 'c+');
@@ -193,16 +193,24 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 		}
 		
 		// Lese aktuellen Zählerstand
-		$fileSize = filesize(ORDER_COUNTER_FILE);
-		if ($fileSize === false) {
-			error_log("Fehler beim Ermitteln der Dateigröße der Counter-Datei");
+		$fileStat = fstat($fp);
+		if ($fileStat === false) {
+			error_log("Fehler beim Ermitteln der Dateistatistik der Counter-Datei");
 			flock($fp, LOCK_UN);
 			fclose($fp);
 			die(ORDER_ERROR_MESSAGE);
 		}
 		
+		$fileSize = $fileStat['size'];
 		if ($fileSize > 0) {
 			$counterData = fread($fp, $fileSize);
+			if ($counterData === false) {
+				error_log("Fehler beim Lesen der Counter-Datei");
+				flock($fp, LOCK_UN);
+				fclose($fp);
+				die(ORDER_ERROR_MESSAGE);
+			}
+			
 			if (!empty($counterData)) {
 				$counterJson = json_decode($counterData, true);
 				if (json_last_error() === JSON_ERROR_NONE && isset($counterJson["counter"])) {
@@ -216,7 +224,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 				}
 			}
 		}
-		// Wenn fileSize == 0 oder Datei leer, verwende Standardwert 1000
+		// Wenn fileSize == 0 oder Datei leer, verwende Standardwert INITIAL_ORDER_COUNTER
 		
 		// Erhöhe Zähler
 		$counter++;
@@ -230,10 +238,21 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 			die(ORDER_ERROR_MESSAGE);
 		}
 		
-		ftruncate($fp, 0);
-		rewind($fp);
-		$writeResult = fwrite($fp, $newCounterData);
+		if (ftruncate($fp, 0) === false) {
+			error_log("Fehler beim Truncate der Counter-Datei");
+			flock($fp, LOCK_UN);
+			fclose($fp);
+			die(ORDER_ERROR_MESSAGE);
+		}
 		
+		if (rewind($fp) === false) {
+			error_log("Fehler beim Rewind der Counter-Datei");
+			flock($fp, LOCK_UN);
+			fclose($fp);
+			die(ORDER_ERROR_MESSAGE);
+		}
+		
+		$writeResult = fwrite($fp, $newCounterData);
 		if ($writeResult === false) {
 			error_log("Fehler beim Schreiben der Counter-Datei");
 			flock($fp, LOCK_UN);
