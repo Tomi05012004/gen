@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-$phpMailerVersion = "PHPMailer_6_1_6";
+$phpMailerVersion = "PHPMailer-6.10.0";
 $path = "../{$phpMailerVersion}/{$phpMailerVersion}";
 require $path.'/src/Exception.php';
 require $path.'/src/PHPMailer.php';
@@ -37,6 +37,14 @@ $site = (empty($_GET["mod"])) ? ("edt") : ($_GET["mod"]);
 /// 
 $itemPosi = -1;
 
+/// Sanitization helper function for XSS prevention
+function sanitize_input($data) {
+	if (is_array($data)) {
+		return array_map('sanitize_input', $data);
+	}
+	return htmlspecialchars(trim($data), ENT_QUOTES, 'UTF-8');
+}
+
 /// verarbete POST Daten
 if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 {
@@ -45,9 +53,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 	{
 		if(intval($_POST["posi"]) > -1)
 		{
-			conf :: ediItem(intval($_POST["posi"]), "font", $_POST["font"]);
-			conf :: ediItem(intval($_POST["posi"]), "text", $_POST["text"]);
-			conf :: ediItem(intval($_POST["posi"]), "char", $_POST["char"]);
+			conf :: ediItem(intval($_POST["posi"]), "font", sanitize_input($_POST["font"]));
+			conf :: ediItem(intval($_POST["posi"]), "text", sanitize_input($_POST["text"]));
+			conf :: ediItem(intval($_POST["posi"]), "char", sanitize_input($_POST["char"]));
 			conf :: ediItem(intval($_POST["posi"]), "foil", $_POST["foil"]);
 			conf :: ediItem(intval($_POST["posi"]), "true", $_POST["true"]);
 			conf :: ediItem(intval($_POST["posi"]), "foilLength", $_POST["leng"]);
@@ -55,7 +63,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 		else
 		{
 			settype($_POST["foil"], "boolean");
-			conf :: addItem($_POST["font"], $_POST["text"], $_POST["char"], $_POST["foil"], $_POST["true"], $_POST["leng"]);
+			conf :: addItem(sanitize_input($_POST["font"]), sanitize_input($_POST["text"]), sanitize_input($_POST["char"]), $_POST["foil"], $_POST["true"], $_POST["leng"]);
 		}
 		
 		/// leite an sich selbst weiter (um Informationsdoppelsenden zu vermeiden)
@@ -79,7 +87,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 		conf :: setLandPosi(intval($_POST["land"]));
 		$landData = conf :: getLandData();
 		conf :: setOrderOptionValue("order.options-rapid.processing", $_POST["rapidProcessing"] == "true" ? true : false);
-		conf :: setUserData($_POST["firm"], $_POST["fnam"], $_POST["lnam"], $_POST["stre"], $_POST["hous"], $_POST["post"], $_POST["city"], $landData["LAND"], $_POST["phon"], $_POST["emai"], $_POST["comm"], $_POST["paym"]);
+		conf :: setUserData(sanitize_input($_POST["firm"]), sanitize_input($_POST["fnam"]), sanitize_input($_POST["lnam"]), sanitize_input($_POST["stre"]), sanitize_input($_POST["hous"]), sanitize_input($_POST["post"]), sanitize_input($_POST["city"]), $landData["LAND"], sanitize_input($_POST["phon"]), sanitize_input($_POST["emai"]), sanitize_input($_POST["comm"]), $_POST["paym"]);
 		/// leite an sich selbst weiter (um Informationsdoppelsenden zu vermeiden)
 		header("Location: {$_SERVER["REQUEST_URI"]}");
 	}
@@ -88,7 +96,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 	{
 		$landData = conf :: getLandData($_POST["firm"]);
 		conf :: setOrderOptionValue("order.options-rapid.processing", $_POST["rapidProcessing"] == "true" ? true : false);
-		conf :: setUserData($_POST["firm"], $_POST["fnam"], $_POST["lnam"], $_POST["stre"], $_POST["hous"], $_POST["post"], $_POST["city"], $landData["LAND"], $_POST["phon"], $_POST["emai"], $_POST["comm"], $_POST["paym"]);
+		conf :: setUserData(sanitize_input($_POST["firm"]), sanitize_input($_POST["fnam"]), sanitize_input($_POST["lnam"]), sanitize_input($_POST["stre"]), sanitize_input($_POST["hous"]), sanitize_input($_POST["post"]), sanitize_input($_POST["city"]), $landData["LAND"], sanitize_input($_POST["phon"]), sanitize_input($_POST["emai"]), sanitize_input($_POST["comm"]), $_POST["paym"]);
 		/// prüfe und versende E-Mail
 		if(!conf :: senConfMess())
 		{

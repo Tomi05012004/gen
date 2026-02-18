@@ -301,11 +301,11 @@ class conf
 			$respItemList[$i]["PRICCHAR"] = number_format($respItemList[$i]["pricchar"], 2, ",", " ");
 
 			/// Price pro Folie
-			$respItemList[$i]["pricfoil"] = ($respItemList[$i]["foil"]) ? (self :: getFoilPric($char, $foilPric, 20)) : (0.00);
+			$respItemList[$i]["pricfoil"] = ($respItemList[$i]["foil"]) ? (self :: getFoilPric($char, $foilPric, self::$opti["leng"])) : (0.00);
 			$respItemList[$i]["PRICFOIL"] = number_format($respItemList[$i]["pricfoil"], 2, ",", " ");
 
 			/// Preis pro WahreLänge
-			$respItemList[$i]["prictrue"] = ($respItemList[$i]["true"] == "true") ? (self :: getFoilPric($char, 9.9, 20)) : (0.00);
+			$respItemList[$i]["prictrue"] = ($respItemList[$i]["true"] == "true") ? (self :: getFoilPric($char, 9.9, self::$opti["leng"])) : (0.00);
 			$respItemList[$i]["PRICTRUE"] = number_format($respItemList[$i]["prictrue"], 2, ",", " ");
 
 			/// Gesamtpreis pro Schriftzug

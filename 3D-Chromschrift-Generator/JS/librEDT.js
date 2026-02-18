@@ -40,7 +40,7 @@ var checkBoxOptionPrice = function(textLength)
 {
 	var triggerRadio = document.getElementById('foiT');
 	var checkBox = document.getElementById('trueLength');
-	var length = 20;
+	var length = 15;
 	
 	if(triggerRadio.checked && checkBox.checked)
 	{
