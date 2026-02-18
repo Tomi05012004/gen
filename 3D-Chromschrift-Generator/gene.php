@@ -168,6 +168,32 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 		$paym = sanitize_input($_POST["paym"] ?? '');
 		
 		conf :: setUserData($firm, $fnam, $lnam, $stre, $hous, $post, $city, $landData["LAND"], $phon, $emai, $comm, $paym);
+		
+		/// Auftragsnummer generieren
+		$counterFile = "PHP/order_counter.json";
+		$counter = 1000; // Standardwert
+		
+		// Lese aktuellen Zählerstand
+		if (file_exists($counterFile)) {
+			$counterData = file_get_contents($counterFile);
+			if (!empty($counterData)) {
+				$counterJson = json_decode($counterData, true);
+				if (isset($counterJson["counter"])) {
+					$counter = intval($counterJson["counter"]);
+				}
+			}
+		}
+		
+		// Erhöhe Zähler
+		$counter++;
+		
+		// Speichere neuen Zählerstand (mit LOCK_EX für Thread-Sicherheit)
+		$newCounterData = json_encode(array("counter" => $counter));
+		file_put_contents($counterFile, $newCounterData, LOCK_EX);
+		
+		// Generiere Auftragsnummer im Format GRAB-YYYY-[Zähler]
+		$orderID = "GRAB-" . date("Y") . "-" . $counter;
+		
 		/// prüfe und versende E-Mail
 		if(!conf :: senConfMess())
 		{
