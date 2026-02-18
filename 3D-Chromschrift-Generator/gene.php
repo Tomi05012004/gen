@@ -270,7 +270,8 @@ echo <<<EOT
 				<ul style = "margin-top: 0px;">
 					<li>Alle Chrombuchstaben sind "selbstklebend",</li>
 					<li>Jeder Text wird zusammenhängend geliefert (wenn Sie die Trägerfolienanbringung auswählen),</li>
-					<li>Ein Qualitäts-Chrombuchstabe kostet nur ab 0,95€ (inkl. MwSt.),</li>
+					<li>Ein Qualitäts-Chrombuchstabe kostet nur ab 1,25 €,</li>
+					<li>Ohne Anbringung auf Trägerfolie (einzeln verpackt),</li>
 					<li>Kostenlose Lieferung innerhalb Deutschlands,</li>
 					<li>Sie zahlen garantiert nicht mehr als angezeigt.</li>
 				</ul>
