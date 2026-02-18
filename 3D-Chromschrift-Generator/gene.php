@@ -22,6 +22,7 @@ $version = 3;
 
 // Define order counter file path
 define('ORDER_COUNTER_FILE', 'PHP/order_counter.json');
+define('ORDER_ERROR_MESSAGE', '<h3>Es ist ein Fehler beim Erstellen der Bestellnummer aufgetreten. Bitte versuchen Sie es später erneut oder kontaktieren Sie unseren Support.</h3>');
 
 conf :: init();
 /// prüfe ob Mobilgerät
@@ -174,26 +175,32 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 		
 		/// Auftragsnummer generieren
 		$counter = 1000; // Standardwert
-		$orderID = null;
-		$orderErrorMsg = "<h3>Es ist ein Fehler beim Erstellen der Bestellnummer aufgetreten. Bitte versuchen Sie es später erneut oder kontaktieren Sie unseren Support.</h3>";
+		$orderID = "";
 		
 		// Öffne Datei mit exklusivem Lock für atomare Read-Modify-Write Operation
 		$fp = fopen(ORDER_COUNTER_FILE, 'c+');
 		if ($fp === false) {
 			// Fehler beim Öffnen der Datei
 			error_log("Fehler beim Öffnen der Counter-Datei: " . ORDER_COUNTER_FILE);
-			die($orderErrorMsg);
+			die(ORDER_ERROR_MESSAGE);
 		}
 		
 		// Exklusiver Lock für die gesamte Operation
 		if (!flock($fp, LOCK_EX)) {
 			error_log("Fehler beim Sperren der Counter-Datei");
 			fclose($fp);
-			die($orderErrorMsg);
+			die(ORDER_ERROR_MESSAGE);
 		}
 		
 		// Lese aktuellen Zählerstand
 		$fileSize = filesize(ORDER_COUNTER_FILE);
+		if ($fileSize === false) {
+			error_log("Fehler beim Ermitteln der Dateigröße der Counter-Datei");
+			flock($fp, LOCK_UN);
+			fclose($fp);
+			die(ORDER_ERROR_MESSAGE);
+		}
+		
 		if ($fileSize > 0) {
 			$counterData = fread($fp, $fileSize);
 			if (!empty($counterData)) {
@@ -205,7 +212,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 					error_log("JSON-Dekodierungsfehler in Counter-Datei: " . json_last_error_msg() . " - Inhalt: " . $counterData);
 					flock($fp, LOCK_UN);
 					fclose($fp);
-					die($orderErrorMsg);
+					die(ORDER_ERROR_MESSAGE);
 				}
 			}
 		}
@@ -216,6 +223,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 		
 		// Speichere neuen Zählerstand
 		$newCounterData = json_encode(array("counter" => $counter));
+		if ($newCounterData === false) {
+			error_log("Fehler beim JSON-Kodieren des Counter-Werts: " . json_last_error_msg());
+			flock($fp, LOCK_UN);
+			fclose($fp);
+			die(ORDER_ERROR_MESSAGE);
+		}
+		
 		ftruncate($fp, 0);
 		rewind($fp);
 		$writeResult = fwrite($fp, $newCounterData);
@@ -224,7 +238,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 			error_log("Fehler beim Schreiben der Counter-Datei");
 			flock($fp, LOCK_UN);
 			fclose($fp);
-			die($orderErrorMsg);
+			die(ORDER_ERROR_MESSAGE);
 		}
 		
 		// Lock freigeben und Datei schließen
