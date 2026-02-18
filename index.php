@@ -2,6 +2,9 @@
 /**
  * Welcome Page - Displays PHP version information
  */
+
+// Configuration
+define('GENERATOR_PATH', '3D-Chromschrift-Generator/gene.php');
 ?>
 <!DOCTYPE html>
 <html lang="de">
@@ -57,11 +60,11 @@
     <div class="container">
         <h1>Willkommen auf meiner Seite</h1>
         <div class="php-version">
-            <strong>Aktuelle PHP-Version auf diesem Server:</strong> <?php echo phpversion(); ?>
+            <strong>Aktuelle PHP-Version auf diesem Server:</strong> <?php echo htmlspecialchars(phpversion(), ENT_QUOTES, 'UTF-8'); ?>
         </div>
         
         <div class="links">
-            <a href="3D-Chromschrift-Generator/gene.php">3D Chrome Text Generator</a>
+            <a href="<?php echo htmlspecialchars(GENERATOR_PATH, ENT_QUOTES, 'UTF-8'); ?>">3D Chrome Text Generator</a>
         </div>
     </div>
 </body>
