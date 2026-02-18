@@ -173,23 +173,46 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 		$counterFile = "PHP/order_counter.json";
 		$counter = 1000; // Standardwert
 		
-		// Lese aktuellen Zählerstand
-		if (file_exists($counterFile)) {
-			$counterData = file_get_contents($counterFile);
-			if (!empty($counterData)) {
-				$counterJson = json_decode($counterData, true);
-				if (isset($counterJson["counter"])) {
-					$counter = intval($counterJson["counter"]);
+		// Öffne Datei mit exklusivem Lock für atomare Read-Modify-Write Operation
+		$fp = fopen($counterFile, 'c+');
+		if ($fp === false) {
+			// Fehler beim Öffnen der Datei - verwende Standardwert
+			error_log("Fehler beim Öffnen der Counter-Datei: $counterFile");
+		} else {
+			// Exklusiver Lock für die gesamte Operation
+			if (flock($fp, LOCK_EX)) {
+				// Lese aktuellen Zählerstand
+				$counterData = fread($fp, filesize($counterFile) ?: 1);
+				if (!empty($counterData)) {
+					$counterJson = json_decode($counterData, true);
+					if (json_last_error() === JSON_ERROR_NONE && isset($counterJson["counter"])) {
+						$counter = intval($counterJson["counter"]);
+					} else {
+						// JSON-Fehler - Log und verwende Standardwert
+						error_log("JSON-Dekodierungsfehler in Counter-Datei: " . json_last_error_msg());
+					}
 				}
+				
+				// Erhöhe Zähler
+				$counter++;
+				
+				// Speichere neuen Zählerstand
+				$newCounterData = json_encode(array("counter" => $counter));
+				ftruncate($fp, 0);
+				rewind($fp);
+				$writeResult = fwrite($fp, $newCounterData);
+				
+				if ($writeResult === false) {
+					error_log("Fehler beim Schreiben der Counter-Datei");
+				}
+				
+				// Lock freigeben
+				flock($fp, LOCK_UN);
+			} else {
+				error_log("Fehler beim Sperren der Counter-Datei");
 			}
+			fclose($fp);
 		}
-		
-		// Erhöhe Zähler
-		$counter++;
-		
-		// Speichere neuen Zählerstand (mit LOCK_EX für Thread-Sicherheit)
-		$newCounterData = json_encode(array("counter" => $counter));
-		file_put_contents($counterFile, $newCounterData, LOCK_EX);
 		
 		// Generiere Auftragsnummer im Format GRAB-YYYY-[Zähler]
 		$orderID = "GRAB-" . date("Y") . "-" . $counter;
