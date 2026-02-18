@@ -115,7 +115,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 	{
 		conf :: setLandPosi(intval($_POST["land"]));
 		$landData = conf :: getLandData();
-		conf :: setOrderOptionValue("order.options-rapid.processing", $_POST["rapidProcessing"] == "true" ? true : false);
+		$rapidProcessing = sanitize_boolean($_POST["rapidProcessing"]);
+		conf :: setOrderOptionValue("order.options-rapid.processing", $rapidProcessing);
 		
 		// Sanitize user data
 		$firm = sanitize_input($_POST["firm"]);
@@ -138,7 +139,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 	else if($_POST["acti"] == "usr")
 	{
 		$landData = conf :: getLandData($_POST["firm"]);
-		conf :: setOrderOptionValue("order.options-rapid.processing", $_POST["rapidProcessing"] == "true" ? true : false);
+		$rapidProcessing = sanitize_boolean($_POST["rapidProcessing"]);
+		conf :: setOrderOptionValue("order.options-rapid.processing", $rapidProcessing);
 		
 		// Sanitize user data
 		$firm = sanitize_input($_POST["firm"]);
