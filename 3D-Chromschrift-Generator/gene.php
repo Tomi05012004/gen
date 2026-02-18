@@ -172,50 +172,68 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 		/// Auftragsnummer generieren
 		$counterFile = "PHP/order_counter.json";
 		$counter = 1000; // Standardwert
+		$orderID = null;
+		$counterSuccess = false;
 		
 		// Öffne Datei mit exklusivem Lock für atomare Read-Modify-Write Operation
 		$fp = fopen($counterFile, 'c+');
 		if ($fp === false) {
-			// Fehler beim Öffnen der Datei - verwende Standardwert
+			// Fehler beim Öffnen der Datei
 			error_log("Fehler beim Öffnen der Counter-Datei: $counterFile");
-		} else {
-			// Exklusiver Lock für die gesamte Operation
-			if (flock($fp, LOCK_EX)) {
-				// Lese aktuellen Zählerstand
-				$counterData = fread($fp, filesize($counterFile) ?: 1);
-				if (!empty($counterData)) {
-					$counterJson = json_decode($counterData, true);
-					if (json_last_error() === JSON_ERROR_NONE && isset($counterJson["counter"])) {
-						$counter = intval($counterJson["counter"]);
-					} else {
-						// JSON-Fehler - Log und verwende Standardwert
-						error_log("JSON-Dekodierungsfehler in Counter-Datei: " . json_last_error_msg());
-					}
-				}
-				
-				// Erhöhe Zähler
-				$counter++;
-				
-				// Speichere neuen Zählerstand
-				$newCounterData = json_encode(array("counter" => $counter));
-				ftruncate($fp, 0);
-				rewind($fp);
-				$writeResult = fwrite($fp, $newCounterData);
-				
-				if ($writeResult === false) {
-					error_log("Fehler beim Schreiben der Counter-Datei");
-				}
-				
-				// Lock freigeben
-				flock($fp, LOCK_UN);
-			} else {
-				error_log("Fehler beim Sperren der Counter-Datei");
-			}
-			fclose($fp);
+			die("<h3>Es ist ein Fehler beim Erstellen der Bestellnummer aufgetreten. Bitte versuchen Sie es später erneut oder kontaktieren Sie unseren Support.</h3>");
 		}
+		
+		// Exklusiver Lock für die gesamte Operation
+		if (!flock($fp, LOCK_EX)) {
+			error_log("Fehler beim Sperren der Counter-Datei");
+			fclose($fp);
+			die("<h3>Es ist ein Fehler beim Erstellen der Bestellnummer aufgetreten. Bitte versuchen Sie es später erneut oder kontaktieren Sie unseren Support.</h3>");
+		}
+		
+		// Lese aktuellen Zählerstand
+		$fileSize = filesize($counterFile);
+		if ($fileSize > 0) {
+			$counterData = fread($fp, $fileSize);
+			if (!empty($counterData)) {
+				$counterJson = json_decode($counterData, true);
+				if (json_last_error() === JSON_ERROR_NONE && isset($counterJson["counter"])) {
+					$counter = intval($counterJson["counter"]);
+				} else {
+					// JSON-Fehler - kritischer Fehler, da Datei korrupt ist
+					error_log("JSON-Dekodierungsfehler in Counter-Datei: " . json_last_error_msg() . " - Inhalt: " . $counterData);
+					flock($fp, LOCK_UN);
+					fclose($fp);
+					die("<h3>Es ist ein Fehler beim Erstellen der Bestellnummer aufgetreten (Datei beschädigt). Bitte kontaktieren Sie unseren Support.</h3>");
+				}
+			}
+		}
+		// Wenn fileSize == 0 oder Datei leer, verwende Standardwert 1000
+		
+		// Erhöhe Zähler
+		$counter++;
+		
+		// Speichere neuen Zählerstand
+		$newCounterData = json_encode(array("counter" => $counter));
+		ftruncate($fp, 0);
+		rewind($fp);
+		$writeResult = fwrite($fp, $newCounterData);
+		
+		if ($writeResult === false) {
+			error_log("Fehler beim Schreiben der Counter-Datei");
+			flock($fp, LOCK_UN);
+			fclose($fp);
+			die("<h3>Es ist ein Fehler beim Erstellen der Bestellnummer aufgetreten. Bitte versuchen Sie es später erneut oder kontaktieren Sie unseren Support.</h3>");
+		}
+		
+		// Lock freigeben und Datei schließen
+		flock($fp, LOCK_UN);
+		fclose($fp);
 		
 		// Generiere Auftragsnummer im Format GRAB-YYYY-[Zähler]
 		$orderID = "GRAB-" . date("Y") . "-" . $counter;
+		
+		// Speichere orderID in Session für spätere Verwendung (z.B. in E-Mail)
+		$_SESSION["orderID"] = $orderID;
 		
 		/// prüfe und versende E-Mail
 		if(!conf :: senConfMess())
