@@ -42,7 +42,7 @@ class conf
 		self::$prodList[0]["idid"] = "artA";
 		self::$prodList[0]["titl"] = "Großbuchstaben";
 		self::$prodList[0]["size"] = 1;
-		self::$prodList[0]["pric"] = 0.95;
+		self::$prodList[0]["pric"] = 1.25;
 		self::$prodList[0]["uppe"] = 1;
 		self::$prodList[0]["lowe"] = 0;
 		self::$prodList[0]["ital"] = 0;
@@ -53,7 +53,7 @@ class conf
 		self::$prodList[1]["idid"] = "artB";
 		self::$prodList[1]["titl"] = "Großbuchstaben";
 		self::$prodList[1]["size"] = 2;
-		self::$prodList[1]["pric"] = 1.15;
+		self::$prodList[1]["pric"] = 1.45;
 		self::$prodList[1]["uppe"] = 1;
 		self::$prodList[1]["lowe"] = 0;
 		self::$prodList[1]["ital"] = 0;
@@ -64,7 +64,7 @@ class conf
 		self::$prodList[2]["idid"] = "artC";
 		self::$prodList[2]["titl"] = "Großbuchstaben";
 		self::$prodList[2]["size"] = 3;
-		self::$prodList[2]["pric"] = 1.65;
+		self::$prodList[2]["pric"] = 1.95;
 		self::$prodList[2]["uppe"] = 1;
 		self::$prodList[2]["lowe"] = 0;
 		self::$prodList[2]["ital"] = 0;
@@ -75,7 +75,7 @@ class conf
 		self::$prodList[3]["idid"] = "artD";
 		self::$prodList[3]["titl"] = "Groß- und Kleinbuchstaben";
 		self::$prodList[3]["size"] = 5.6;
-		self::$prodList[3]["pric"] = 3.4;
+		self::$prodList[3]["pric"] = 3.95;
 		self::$prodList[3]["uppe"] = 0;
 		self::$prodList[3]["lowe"] = 0;
 		self::$prodList[3]["ital"] = 0;
@@ -86,7 +86,7 @@ class conf
 		self::$prodList[4]["idid"] = "artE";
 		self::$prodList[4]["titl"] = "Kleinbuchstaben";
 		self::$prodList[4]["size"] = 2.5;
-		self::$prodList[4]["pric"] = 1.25;
+		self::$prodList[4]["pric"] = 1.65;
 		self::$prodList[4]["uppe"] = 0;
 		self::$prodList[4]["lowe"] = 1;
 		self::$prodList[4]["ital"] = 0;
@@ -97,7 +97,7 @@ class conf
 		self::$prodList[5]["idid"] = "artF";
 		self::$prodList[5]["titl"] = "Kursive Buchstaben";
 		self::$prodList[5]["size"] = 2.6;
-		self::$prodList[5]["pric"] = 1.45;
+		self::$prodList[5]["pric"] = 1.95;
 		self::$prodList[5]["uppe"] = 1;
 		self::$prodList[5]["lowe"] = 0;
 		self::$prodList[5]["ital"] = 1;
@@ -106,7 +106,7 @@ class conf
 		self::$prodList[5]["symb"] = ".-@!?+&%()\"";
 
 		self::$opti["cost"] = 4.9;
-		self::$opti["leng"] = 20;
+		self::$opti["leng"] = 15;
 
 		self :: getOrderOptions();
 	}
