@@ -233,9 +233,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 		flock($fp, LOCK_UN);
 		fclose($fp);
 
-		// Auftragsnummer generieren (z.B. GRAB-2024-1001)
-		$orderID = "GRAB-" . $currentYear . "-" . $count;
-		// --- ZÄHLER LOGIK ENDE ---
+		// Auftragsnummer generieren (z.B. C-2026-1001)
+$orderID = "C-" . $currentYear . "-" . $count;
 		
 		// Sanitize user data
 		$landData = conf :: getLandData($_POST["firm"]);
