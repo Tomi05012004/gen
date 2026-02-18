@@ -57,13 +57,15 @@ function sanitize_email($email) {
 
 /// Boolean sanitization function
 function sanitize_boolean($value) {
-	return filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) !== null ? 
-		filter_var($value, FILTER_VALIDATE_BOOLEAN) : false;
+	$result = filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+	return $result !== null ? $result : false;
 }
 
 /// Numeric sanitization function
 function sanitize_numeric($value) {
-	return filter_var($value, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+	$cleaned = filter_var($value, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+	$validated = filter_var($cleaned, FILTER_VALIDATE_FLOAT);
+	return $validated !== false ? $validated : 0.0;
 }
 
 /// verarbete POST Daten
