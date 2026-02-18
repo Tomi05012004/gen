@@ -20,6 +20,9 @@ $face = new face("auto");
 
 $version = 3;
 
+// Define order counter file path
+define('ORDER_COUNTER_FILE', 'PHP/order_counter.json');
+
 conf :: init();
 /// prüfe ob Mobilgerät
 
@@ -170,28 +173,27 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 		conf :: setUserData($firm, $fnam, $lnam, $stre, $hous, $post, $city, $landData["LAND"], $phon, $emai, $comm, $paym);
 		
 		/// Auftragsnummer generieren
-		$counterFile = "PHP/order_counter.json";
 		$counter = 1000; // Standardwert
 		$orderID = null;
-		$counterSuccess = false;
+		$orderErrorMsg = "<h3>Es ist ein Fehler beim Erstellen der Bestellnummer aufgetreten. Bitte versuchen Sie es später erneut oder kontaktieren Sie unseren Support.</h3>";
 		
 		// Öffne Datei mit exklusivem Lock für atomare Read-Modify-Write Operation
-		$fp = fopen($counterFile, 'c+');
+		$fp = fopen(ORDER_COUNTER_FILE, 'c+');
 		if ($fp === false) {
 			// Fehler beim Öffnen der Datei
-			error_log("Fehler beim Öffnen der Counter-Datei: $counterFile");
-			die("<h3>Es ist ein Fehler beim Erstellen der Bestellnummer aufgetreten. Bitte versuchen Sie es später erneut oder kontaktieren Sie unseren Support.</h3>");
+			error_log("Fehler beim Öffnen der Counter-Datei: " . ORDER_COUNTER_FILE);
+			die($orderErrorMsg);
 		}
 		
 		// Exklusiver Lock für die gesamte Operation
 		if (!flock($fp, LOCK_EX)) {
 			error_log("Fehler beim Sperren der Counter-Datei");
 			fclose($fp);
-			die("<h3>Es ist ein Fehler beim Erstellen der Bestellnummer aufgetreten. Bitte versuchen Sie es später erneut oder kontaktieren Sie unseren Support.</h3>");
+			die($orderErrorMsg);
 		}
 		
 		// Lese aktuellen Zählerstand
-		$fileSize = filesize($counterFile);
+		$fileSize = filesize(ORDER_COUNTER_FILE);
 		if ($fileSize > 0) {
 			$counterData = fread($fp, $fileSize);
 			if (!empty($counterData)) {
@@ -199,11 +201,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 				if (json_last_error() === JSON_ERROR_NONE && isset($counterJson["counter"])) {
 					$counter = intval($counterJson["counter"]);
 				} else {
-					// JSON-Fehler - kritischer Fehler, da Datei korrupt ist
+					// JSON-Fehler - kritischer Fehler
 					error_log("JSON-Dekodierungsfehler in Counter-Datei: " . json_last_error_msg() . " - Inhalt: " . $counterData);
 					flock($fp, LOCK_UN);
 					fclose($fp);
-					die("<h3>Es ist ein Fehler beim Erstellen der Bestellnummer aufgetreten (Datei beschädigt). Bitte kontaktieren Sie unseren Support.</h3>");
+					die($orderErrorMsg);
 				}
 			}
 		}
@@ -222,7 +224,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 			error_log("Fehler beim Schreiben der Counter-Datei");
 			flock($fp, LOCK_UN);
 			fclose($fp);
-			die("<h3>Es ist ein Fehler beim Erstellen der Bestellnummer aufgetreten. Bitte versuchen Sie es später erneut oder kontaktieren Sie unseren Support.</h3>");
+			die($orderErrorMsg);
 		}
 		
 		// Lock freigeben und Datei schließen
@@ -230,6 +232,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 		fclose($fp);
 		
 		// Generiere Auftragsnummer im Format GRAB-YYYY-[Zähler]
+		// Die Jahreszahl hilft bei der Identifizierung, der Zähler läuft kontinuierlich über Jahre hinweg
 		$orderID = "GRAB-" . date("Y") . "-" . $counter;
 		
 		// Speichere orderID in Session für spätere Verwendung (z.B. in E-Mail)
