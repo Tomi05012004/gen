@@ -593,7 +593,7 @@ class conf
 
 	/*---------------------------------------------------------------------------------------------------------------------------------------------------------*/
 	/// E-Mail
-	public static function senConfMess()
+	public static function senConfMess($orderID = "")
 	{
 		$vendData = self :: getVendData();
 		$userData = self :: getUserData();
@@ -909,9 +909,9 @@ EOT;*/
 		// $vendFoot .= "www.chrombeschriftung.de{$nl}";
 		// $vendFoot .= "{$nl}";
 
-		$userSubj = "Ihre Beschriftung wurde bestellt";
+		$userSubj = "Bestätigung Ihrer Bestellung" . ($orderID ? " " . $orderID : "");
 
-		$vendSubj = "Neuer Bestellvorgang";
+		$vendSubj = "Neuer Bestellvorgang" . ($orderID ? " " . $orderID : "");
 
 
 

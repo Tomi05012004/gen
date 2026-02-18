@@ -155,11 +155,47 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 	/// Artikel gekauft
 	else if($_POST["acti"] == "usr")
 	{
+		// SICHERHEIT: E-Mail-Adresse validieren
+		if (empty($_POST["emai"]) || !filter_var($_POST["emai"], FILTER_VALIDATE_EMAIL)) {
+			die("<h3>FEHLER: Bitte geben Sie eine gültige E-Mail-Adresse ein.</h3>");
+		}
+		
+		// SICHERHEIT: Pflichtfelder prüfen
+		if (empty($_POST["fnam"]) || empty($_POST["stre"]) || empty($_POST["post"]) || empty($_POST["city"])) {
+			die("<h3>FEHLER: Bitte füllen Sie alle Pflichtfelder aus.</h3>");
+		}
+
+		// --- ZÄHLER LOGIK START ---
+		$counterFile = 'PHP/order_counter.json';
+		$currentYear = date("Y");
+		$startCount = 1000; // Startwert falls Datei leer
+
+		// Zähler laden
+		$count = $startCount;
+		if (file_exists($counterFile)) {
+			$jsonContent = file_get_contents($counterFile);
+			$data = json_decode($jsonContent, true);
+			if (isset($data['count'])) {
+				$count = intval($data['count']);
+			}
+		}
+
+		// Hochzählen
+		$count++;
+		
+		// Speichern (mit File-Locking gegen gleichzeitige Schreibzugriffe)
+		$newData = json_encode(['count' => $count]);
+		file_put_contents($counterFile, $newData, LOCK_EX);
+
+		// Auftragsnummer generieren (z.B. GRAB-2024-1001)
+		$orderID = "GRAB-" . $currentYear . "-" . $count;
+		// --- ZÄHLER LOGIK ENDE ---
+		
+		// Sanitize user data
 		$landData = conf :: getLandData($_POST["firm"]);
 		$rapidProcessing = sanitize_boolean($_POST["rapidProcessing"] ?? false);
 		conf :: setOrderOptionValue("order.options-rapid.processing", $rapidProcessing);
 		
-		// Sanitize user data
 		$firm = sanitize_input($_POST["firm"] ?? '');
 		$fnam = sanitize_input($_POST["fnam"] ?? '');
 		$lnam = sanitize_input($_POST["lnam"] ?? '');
@@ -172,110 +208,15 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 		$comm = sanitize_input($_POST["comm"] ?? '');
 		$paym = sanitize_input($_POST["paym"] ?? '');
 		
+		// User hinzufügen (Daten speichern)
 		conf :: setUserData($firm, $fnam, $lnam, $stre, $hous, $post, $city, $landData["LAND"], $phon, $emai, $comm, $paym);
 		
-		/// Auftragsnummer generieren
-		$counter = INITIAL_ORDER_COUNTER;
-		
-		// Öffne Datei mit exklusivem Lock für atomare Read-Modify-Write Operation
-		$fp = fopen(ORDER_COUNTER_FILE, 'c+');
-		if ($fp === false) {
-			// Fehler beim Öffnen der Datei
-			error_log("Fehler beim Öffnen der Counter-Datei: " . ORDER_COUNTER_FILE);
-			die(ORDER_ERROR_MESSAGE);
-		}
-		
-		// Exklusiver Lock für die gesamte Operation
-		if (!flock($fp, LOCK_EX)) {
-			error_log("Fehler beim Sperren der Counter-Datei");
-			fclose($fp);
-			die(ORDER_ERROR_MESSAGE);
-		}
-		
-		// Lese aktuellen Zählerstand
-		$fileStat = fstat($fp);
-		if ($fileStat === false) {
-			error_log("Fehler beim Ermitteln der Dateistatistik der Counter-Datei");
-			flock($fp, LOCK_UN);
-			fclose($fp);
-			die(ORDER_ERROR_MESSAGE);
-		}
-		
-		$fileSize = $fileStat['size'];
-		if ($fileSize > 0) {
-			$counterData = fread($fp, $fileSize);
-			if ($counterData === false) {
-				error_log("Fehler beim Lesen der Counter-Datei");
-				flock($fp, LOCK_UN);
-				fclose($fp);
-				die(ORDER_ERROR_MESSAGE);
-			}
-			
-			if (!empty($counterData)) {
-				$counterJson = json_decode($counterData, true);
-				if (json_last_error() === JSON_ERROR_NONE && isset($counterJson["counter"])) {
-					$counter = intval($counterJson["counter"]);
-				} else {
-					// JSON-Fehler - kritischer Fehler
-					error_log("JSON-Dekodierungsfehler in Counter-Datei: " . json_last_error_msg() . " - Inhalt: " . $counterData);
-					flock($fp, LOCK_UN);
-					fclose($fp);
-					die(ORDER_ERROR_MESSAGE);
-				}
-			}
-		}
-		// Wenn fileSize == 0 oder Datei leer, verwende Standardwert INITIAL_ORDER_COUNTER
-		
-		// Erhöhe Zähler
-		$counter++;
-		
-		// Speichere neuen Zählerstand
-		$newCounterData = json_encode(array("counter" => $counter));
-		if ($newCounterData === false) {
-			error_log("Fehler beim JSON-Kodieren des Counter-Werts: " . json_last_error_msg());
-			flock($fp, LOCK_UN);
-			fclose($fp);
-			die(ORDER_ERROR_MESSAGE);
-		}
-		
-		if (ftruncate($fp, 0) === false) {
-			error_log("Fehler beim Truncate der Counter-Datei");
-			flock($fp, LOCK_UN);
-			fclose($fp);
-			die(ORDER_ERROR_MESSAGE);
-		}
-		
-		if (rewind($fp) === false) {
-			error_log("Fehler beim Rewind der Counter-Datei");
-			flock($fp, LOCK_UN);
-			fclose($fp);
-			die(ORDER_ERROR_MESSAGE);
-		}
-		
-		$writeResult = fwrite($fp, $newCounterData);
-		if ($writeResult === false) {
-			error_log("Fehler beim Schreiben der Counter-Datei");
-			flock($fp, LOCK_UN);
-			fclose($fp);
-			die(ORDER_ERROR_MESSAGE);
-		}
-		
-		// Lock freigeben und Datei schließen
-		flock($fp, LOCK_UN);
-		fclose($fp);
-		
-		// Generiere Auftragsnummer im Format GRAB-YYYY-[Zähler]
-		// Die Jahreszahl hilft bei der Identifizierung, der Zähler läuft kontinuierlich über Jahre hinweg
-		$orderID = "GRAB-" . date("Y") . "-" . $counter;
-		
-		// Speichere orderID in Session für spätere Verwendung (z.B. in E-Mail)
-		$_SESSION["orderID"] = $orderID;
-		
-		/// prüfe und versende E-Mail
-		if(!conf :: senConfMess())
+		// WICHTIG: Hier übergeben wir die $orderID an die Mail-Funktion!
+		if(!conf :: senConfMess($orderID))
 		{
-			die("<h3>Bei dem Versenden des E-Mails ist ein Fehler augetretten. Bitte versuchen Sie die Seite neu zu laden oder kontaktieren Sie unsere Supportdienst.<h3>");
+			die("<h3>Bei dem Versenden des E-Mails ist ein Fehler aufgetreten. Bitte versuchen Sie die Seite neu zu laden oder kontaktieren Sie unsere Supportdienst.</h3>");
 		}
+		
 		/// leite an PayPal weiter (falls kein PayPal Funktion wird übersprungen)
 		conf :: redPaypSite();
 		/// leite an sich selbst weiter (um Informationsdoppelsenden zu vermeiden)
