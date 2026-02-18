@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-$phpMailerVersion = "PHPMailer_6_1_6";
+$phpMailerVersion = "PHPMailer-6.10.0";
 $path = "../{$phpMailerVersion}/{$phpMailerVersion}";
 require $path.'/src/Exception.php';
 require $path.'/src/PHPMailer.php';
@@ -37,6 +37,50 @@ $site = (empty($_GET["mod"])) ? ("edt") : ($_GET["mod"]);
 /// 
 $itemPosi = -1;
 
+/// Sanitization helper function for XSS prevention
+function sanitize_input($data) {
+	if (is_array($data)) {
+		return array_map('sanitize_input', $data);
+	}
+	if ($data === null) {
+		return '';
+	}
+	return htmlspecialchars(trim($data), ENT_QUOTES, 'UTF-8');
+}
+
+/// Email validation and sanitization function
+function sanitize_email($email) {
+	if ($email === null) {
+		return '';
+	}
+	$email = trim($email);
+	// Validate email format
+	if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+		// Sanitize for safe output
+		return htmlspecialchars($email, ENT_QUOTES, 'UTF-8');
+	}
+	return '';
+}
+
+/// Boolean sanitization function
+function sanitize_boolean($value) {
+	if ($value === null) {
+		return false;
+	}
+	$result = filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+	return $result !== null ? $result : false;
+}
+
+/// Numeric sanitization function
+function sanitize_numeric($value) {
+	if ($value === null) {
+		return 0.0;
+	}
+	$cleaned = filter_var($value, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+	$validated = filter_var($cleaned, FILTER_VALIDATE_FLOAT);
+	return $validated !== false ? $validated : 0.0;
+}
+
 /// verarbete POST Daten
 if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 {
@@ -45,17 +89,22 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 	{
 		if(intval($_POST["posi"]) > -1)
 		{
-			conf :: ediItem(intval($_POST["posi"]), "font", $_POST["font"]);
-			conf :: ediItem(intval($_POST["posi"]), "text", $_POST["text"]);
-			conf :: ediItem(intval($_POST["posi"]), "char", $_POST["char"]);
-			conf :: ediItem(intval($_POST["posi"]), "foil", $_POST["foil"]);
-			conf :: ediItem(intval($_POST["posi"]), "true", $_POST["true"]);
-			conf :: ediItem(intval($_POST["posi"]), "foilLength", $_POST["leng"]);
+			conf :: ediItem(intval($_POST["posi"]), "font", sanitize_input($_POST["font"] ?? ''));
+			conf :: ediItem(intval($_POST["posi"]), "text", sanitize_input($_POST["text"] ?? ''));
+			conf :: ediItem(intval($_POST["posi"]), "char", sanitize_input($_POST["char"] ?? ''));
+			conf :: ediItem(intval($_POST["posi"]), "foil", sanitize_boolean($_POST["foil"] ?? false));
+			conf :: ediItem(intval($_POST["posi"]), "true", sanitize_boolean($_POST["true"] ?? false));
+			conf :: ediItem(intval($_POST["posi"]), "foilLength", sanitize_numeric($_POST["leng"] ?? 0));
 		}
 		else
 		{
-			settype($_POST["foil"], "boolean");
-			conf :: addItem($_POST["font"], $_POST["text"], $_POST["char"], $_POST["foil"], $_POST["true"], $_POST["leng"]);
+			$font = sanitize_input($_POST["font"] ?? '');
+			$text = sanitize_input($_POST["text"] ?? '');
+			$char = sanitize_input($_POST["char"] ?? '');
+			$foil = sanitize_boolean($_POST["foil"] ?? false);
+			$true = sanitize_boolean($_POST["true"] ?? false);
+			$leng = sanitize_numeric($_POST["leng"] ?? 0);
+			conf :: addItem($font, $text, $char, $foil, $true, $leng);
 		}
 		
 		/// leite an sich selbst weiter (um Informationsdoppelsenden zu vermeiden)
@@ -78,8 +127,23 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 	{
 		conf :: setLandPosi(intval($_POST["land"]));
 		$landData = conf :: getLandData();
-		conf :: setOrderOptionValue("order.options-rapid.processing", $_POST["rapidProcessing"] == "true" ? true : false);
-		conf :: setUserData($_POST["firm"], $_POST["fnam"], $_POST["lnam"], $_POST["stre"], $_POST["hous"], $_POST["post"], $_POST["city"], $landData["LAND"], $_POST["phon"], $_POST["emai"], $_POST["comm"], $_POST["paym"]);
+		$rapidProcessing = sanitize_boolean($_POST["rapidProcessing"] ?? false);
+		conf :: setOrderOptionValue("order.options-rapid.processing", $rapidProcessing);
+		
+		// Sanitize user data
+		$firm = sanitize_input($_POST["firm"] ?? '');
+		$fnam = sanitize_input($_POST["fnam"] ?? '');
+		$lnam = sanitize_input($_POST["lnam"] ?? '');
+		$stre = sanitize_input($_POST["stre"] ?? '');
+		$hous = sanitize_input($_POST["hous"] ?? '');
+		$post = sanitize_input($_POST["post"] ?? '');
+		$city = sanitize_input($_POST["city"] ?? '');
+		$phon = sanitize_input($_POST["phon"] ?? '');
+		$emai = sanitize_email($_POST["emai"] ?? '');
+		$comm = sanitize_input($_POST["comm"] ?? '');
+		$paym = sanitize_input($_POST["paym"] ?? '');
+		
+		conf :: setUserData($firm, $fnam, $lnam, $stre, $hous, $post, $city, $landData["LAND"], $phon, $emai, $comm, $paym);
 		/// leite an sich selbst weiter (um Informationsdoppelsenden zu vermeiden)
 		header("Location: {$_SERVER["REQUEST_URI"]}");
 	}
@@ -87,8 +151,23 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 	else if($_POST["acti"] == "usr")
 	{
 		$landData = conf :: getLandData($_POST["firm"]);
-		conf :: setOrderOptionValue("order.options-rapid.processing", $_POST["rapidProcessing"] == "true" ? true : false);
-		conf :: setUserData($_POST["firm"], $_POST["fnam"], $_POST["lnam"], $_POST["stre"], $_POST["hous"], $_POST["post"], $_POST["city"], $landData["LAND"], $_POST["phon"], $_POST["emai"], $_POST["comm"], $_POST["paym"]);
+		$rapidProcessing = sanitize_boolean($_POST["rapidProcessing"] ?? false);
+		conf :: setOrderOptionValue("order.options-rapid.processing", $rapidProcessing);
+		
+		// Sanitize user data
+		$firm = sanitize_input($_POST["firm"] ?? '');
+		$fnam = sanitize_input($_POST["fnam"] ?? '');
+		$lnam = sanitize_input($_POST["lnam"] ?? '');
+		$stre = sanitize_input($_POST["stre"] ?? '');
+		$hous = sanitize_input($_POST["hous"] ?? '');
+		$post = sanitize_input($_POST["post"] ?? '');
+		$city = sanitize_input($_POST["city"] ?? '');
+		$phon = sanitize_input($_POST["phon"] ?? '');
+		$emai = sanitize_email($_POST["emai"] ?? '');
+		$comm = sanitize_input($_POST["comm"] ?? '');
+		$paym = sanitize_input($_POST["paym"] ?? '');
+		
+		conf :: setUserData($firm, $fnam, $lnam, $stre, $hous, $post, $city, $landData["LAND"], $phon, $emai, $comm, $paym);
 		/// prüfe und versende E-Mail
 		if(!conf :: senConfMess())
 		{
