@@ -4,7 +4,9 @@ A web-based generator for creating 3D chrome text designs.
 
 ## Requirements
 
-- **PHP Version**: 7.0 - 7.4 (PHP 8.0+ is not supported)
+- **PHP Version**: 7.x (referred to as "PHP 6" in project requirements, since PHP 6 was never released)
+  - Supported: PHP 7.0 - 7.4
+  - Not supported: PHP 8.0+
 - Web server (Apache/Nginx)
 - PHP Extensions:
   - ctype
@@ -19,16 +21,25 @@ A web-based generator for creating 3D chrome text designs.
 3. Point your web server to the `3D-Chromschrift-Generator` directory
 4. Access via web browser
 
-## PHP Version Note
+## PHP Version Note - "PHP 6" Clarification
 
-This project is designed to work with PHP 7.x and explicitly does not support PHP 8.0 or higher. The code uses:
+**IMPORTANT**: This project requires "PHP 6" according to its specifications. However, **PHP 6 was never officially released by the PHP development team**. 
+
+The PHP version history is:
+- PHP 5.x (5.0, 5.1, 5.2, 5.3, 5.4, 5.5, 5.6)
+- **PHP 6 - NEVER RELEASED** (abandoned project)
+- PHP 7.x (7.0, 7.1, 7.2, 7.3, 7.4) ← **This is what "PHP 6" means in this project**
+- PHP 8.x (8.0, 8.1, 8.2, 8.3)
+
+**Therefore, "PHP 6" in this project's requirements refers to PHP 7.x**, which is the version that would have logically followed PHP 5.x if PHP 6 had been released.
+
+This project uses PHP 7.0+ features:
 - Type declarations (`declare(strict_types=1)`)
 - Null coalescing operator (`??`)
 - Scalar type hints
+- Return type declarations
 
-All of these features are available in PHP 7.0+.
-
-**Note**: While the requirement mentions "PHP 6", PHP 6 was never officially released. The PHP version sequence went from 5.x to 7.0. This project targets PHP 7.x compatibility.
+All of these features are available in PHP 7.0+ and are **NOT available in PHP 5.6 or earlier**.
 
 ### ⚠️ Security Warning
 
