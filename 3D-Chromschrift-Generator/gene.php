@@ -45,6 +45,11 @@ function sanitize_input($data) {
 	return htmlspecialchars(trim($data), ENT_QUOTES, 'UTF-8');
 }
 
+/// Email sanitization function
+function sanitize_email($email) {
+	return filter_var(trim($email), FILTER_SANITIZE_EMAIL);
+}
+
 /// verarbete POST Daten
 if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 {
@@ -87,7 +92,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 		conf :: setLandPosi(intval($_POST["land"]));
 		$landData = conf :: getLandData();
 		conf :: setOrderOptionValue("order.options-rapid.processing", $_POST["rapidProcessing"] == "true" ? true : false);
-		conf :: setUserData(sanitize_input($_POST["firm"]), sanitize_input($_POST["fnam"]), sanitize_input($_POST["lnam"]), sanitize_input($_POST["stre"]), sanitize_input($_POST["hous"]), sanitize_input($_POST["post"]), sanitize_input($_POST["city"]), $landData["LAND"], sanitize_input($_POST["phon"]), sanitize_input($_POST["emai"]), sanitize_input($_POST["comm"]), $_POST["paym"]);
+		conf :: setUserData(sanitize_input($_POST["firm"]), sanitize_input($_POST["fnam"]), sanitize_input($_POST["lnam"]), sanitize_input($_POST["stre"]), sanitize_input($_POST["hous"]), sanitize_input($_POST["post"]), sanitize_input($_POST["city"]), $landData["LAND"], sanitize_input($_POST["phon"]), sanitize_email($_POST["emai"]), sanitize_input($_POST["comm"]), $_POST["paym"]);
 		/// leite an sich selbst weiter (um Informationsdoppelsenden zu vermeiden)
 		header("Location: {$_SERVER["REQUEST_URI"]}");
 	}
@@ -96,7 +101,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 	{
 		$landData = conf :: getLandData($_POST["firm"]);
 		conf :: setOrderOptionValue("order.options-rapid.processing", $_POST["rapidProcessing"] == "true" ? true : false);
-		conf :: setUserData(sanitize_input($_POST["firm"]), sanitize_input($_POST["fnam"]), sanitize_input($_POST["lnam"]), sanitize_input($_POST["stre"]), sanitize_input($_POST["hous"]), sanitize_input($_POST["post"]), sanitize_input($_POST["city"]), $landData["LAND"], sanitize_input($_POST["phon"]), sanitize_input($_POST["emai"]), sanitize_input($_POST["comm"]), $_POST["paym"]);
+		conf :: setUserData(sanitize_input($_POST["firm"]), sanitize_input($_POST["fnam"]), sanitize_input($_POST["lnam"]), sanitize_input($_POST["stre"]), sanitize_input($_POST["hous"]), sanitize_input($_POST["post"]), sanitize_input($_POST["city"]), $landData["LAND"], sanitize_input($_POST["phon"]), sanitize_email($_POST["emai"]), sanitize_input($_POST["comm"]), $_POST["paym"]);
 		/// prüfe und versende E-Mail
 		if(!conf :: senConfMess())
 		{
