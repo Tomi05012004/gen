@@ -170,22 +170,68 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 		$currentYear = date("Y");
 		$startCount = 1000; // Startwert falls Datei leer
 
-		// Zähler laden
+		// Zähler laden mit File-Locking für atomare Read-Modify-Write Operation
 		$count = $startCount;
-		if (file_exists($counterFile)) {
-			$jsonContent = file_get_contents($counterFile);
-			$data = json_decode($jsonContent, true);
-			if (isset($data['count'])) {
-				$count = intval($data['count']);
+		$fp = fopen($counterFile, 'c+');
+		if ($fp === false) {
+			error_log("Fehler beim Öffnen der Counter-Datei: " . $counterFile);
+			die("<h3>FEHLER: Es ist ein Fehler beim Erstellen der Bestellnummer aufgetreten. Bitte versuchen Sie es später erneut.</h3>");
+		}
+		
+		// Exklusiver Lock für die gesamte Operation
+		if (!flock($fp, LOCK_EX)) {
+			error_log("Fehler beim Sperren der Counter-Datei");
+			fclose($fp);
+			die("<h3>FEHLER: Es ist ein Fehler beim Erstellen der Bestellnummer aufgetreten. Bitte versuchen Sie es später erneut.</h3>");
+		}
+		
+		// Lese aktuellen Zählerstand
+		$fileSize = filesize($counterFile);
+		if ($fileSize > 0) {
+			$jsonContent = fread($fp, $fileSize);
+			if ($jsonContent !== false && !empty($jsonContent)) {
+				$data = json_decode($jsonContent, true);
+				if (json_last_error() === JSON_ERROR_NONE && isset($data['count'])) {
+					$count = intval($data['count']);
+				} else {
+					error_log("JSON-Dekodierungsfehler in Counter-Datei: " . json_last_error_msg());
+					flock($fp, LOCK_UN);
+					fclose($fp);
+					die("<h3>FEHLER: Es ist ein Fehler beim Erstellen der Bestellnummer aufgetreten. Bitte versuchen Sie es später erneut.</h3>");
+				}
 			}
 		}
 
 		// Hochzählen
 		$count++;
 		
-		// Speichern (mit File-Locking gegen gleichzeitige Schreibzugriffe)
+		// Speichern mit atomarer Operation
 		$newData = json_encode(['count' => $count]);
-		file_put_contents($counterFile, $newData, LOCK_EX);
+		if ($newData === false) {
+			error_log("Fehler beim JSON-Kodieren des Counter-Werts: " . json_last_error_msg());
+			flock($fp, LOCK_UN);
+			fclose($fp);
+			die("<h3>FEHLER: Es ist ein Fehler beim Erstellen der Bestellnummer aufgetreten. Bitte versuchen Sie es später erneut.</h3>");
+		}
+		
+		if (ftruncate($fp, 0) === false || rewind($fp) === false) {
+			error_log("Fehler beim Vorbereiten der Counter-Datei für Schreibvorgang");
+			flock($fp, LOCK_UN);
+			fclose($fp);
+			die("<h3>FEHLER: Es ist ein Fehler beim Erstellen der Bestellnummer aufgetreten. Bitte versuchen Sie es später erneut.</h3>");
+		}
+		
+		$writeResult = fwrite($fp, $newData);
+		if ($writeResult === false) {
+			error_log("Fehler beim Schreiben der Counter-Datei");
+			flock($fp, LOCK_UN);
+			fclose($fp);
+			die("<h3>FEHLER: Es ist ein Fehler beim Erstellen der Bestellnummer aufgetreten. Bitte versuchen Sie es später erneut.</h3>");
+		}
+		
+		// Lock freigeben und Datei schließen
+		flock($fp, LOCK_UN);
+		fclose($fp);
 
 		// Auftragsnummer generieren (z.B. GRAB-2024-1001)
 		$orderID = "GRAB-" . $currentYear . "-" . $count;
