@@ -166,23 +166,23 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 		}
 
 		// --- ZÄHLER LOGIK START ---
-		$counterFile = 'PHP/order_counter.json';
+		$counterFile = ORDER_COUNTER_FILE;
 		$currentYear = date("Y");
-		$startCount = 1000; // Startwert falls Datei leer
+		$startCount = INITIAL_ORDER_COUNTER; // Startwert falls Datei leer
 
 		// Zähler laden mit File-Locking für atomare Read-Modify-Write Operation
 		$count = $startCount;
 		$fp = fopen($counterFile, 'c+');
 		if ($fp === false) {
 			error_log("Fehler beim Öffnen der Counter-Datei: " . $counterFile);
-			die("<h3>FEHLER: Es ist ein Fehler beim Erstellen der Bestellnummer aufgetreten. Bitte versuchen Sie es später erneut.</h3>");
+			die(ORDER_ERROR_MESSAGE);
 		}
 		
 		// Exklusiver Lock für die gesamte Operation
 		if (!flock($fp, LOCK_EX)) {
 			error_log("Fehler beim Sperren der Counter-Datei");
 			fclose($fp);
-			die("<h3>FEHLER: Es ist ein Fehler beim Erstellen der Bestellnummer aufgetreten. Bitte versuchen Sie es später erneut.</h3>");
+			die(ORDER_ERROR_MESSAGE);
 		}
 		
 		// Lese aktuellen Zählerstand
@@ -197,7 +197,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 					error_log("JSON-Dekodierungsfehler in Counter-Datei: " . json_last_error_msg());
 					flock($fp, LOCK_UN);
 					fclose($fp);
-					die("<h3>FEHLER: Es ist ein Fehler beim Erstellen der Bestellnummer aufgetreten. Bitte versuchen Sie es später erneut.</h3>");
+					die(ORDER_ERROR_MESSAGE);
 				}
 			}
 		}
@@ -211,14 +211,14 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 			error_log("Fehler beim JSON-Kodieren des Counter-Werts: " . json_last_error_msg());
 			flock($fp, LOCK_UN);
 			fclose($fp);
-			die("<h3>FEHLER: Es ist ein Fehler beim Erstellen der Bestellnummer aufgetreten. Bitte versuchen Sie es später erneut.</h3>");
+			die(ORDER_ERROR_MESSAGE);
 		}
 		
 		if (ftruncate($fp, 0) === false || rewind($fp) === false) {
 			error_log("Fehler beim Vorbereiten der Counter-Datei für Schreibvorgang");
 			flock($fp, LOCK_UN);
 			fclose($fp);
-			die("<h3>FEHLER: Es ist ein Fehler beim Erstellen der Bestellnummer aufgetreten. Bitte versuchen Sie es später erneut.</h3>");
+			die(ORDER_ERROR_MESSAGE);
 		}
 		
 		$writeResult = fwrite($fp, $newData);
@@ -226,7 +226,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 			error_log("Fehler beim Schreiben der Counter-Datei");
 			flock($fp, LOCK_UN);
 			fclose($fp);
-			die("<h3>FEHLER: Es ist ein Fehler beim Erstellen der Bestellnummer aufgetreten. Bitte versuchen Sie es später erneut.</h3>");
+			die(ORDER_ERROR_MESSAGE);
 		}
 		
 		// Lock freigeben und Datei schließen
