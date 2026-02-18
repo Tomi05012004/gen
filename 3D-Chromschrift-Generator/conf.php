@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 /*
 Chromschriften-Generator
@@ -27,8 +26,6 @@ class conf
 	/// Warenkorb
 	public static $itemTotaPric = 0.00;
 
-	/// Mail configuration cache
-	private static $mailConfig = null;
 
   public static $newMail;
 	function setInstanz($mail){
@@ -45,7 +42,7 @@ class conf
 		self::$prodList[0]["idid"] = "artA";
 		self::$prodList[0]["titl"] = "Großbuchstaben";
 		self::$prodList[0]["size"] = 1;
-		self::$prodList[0]["pric"] = 1.25;
+		self::$prodList[0]["pric"] = 0.95;
 		self::$prodList[0]["uppe"] = 1;
 		self::$prodList[0]["lowe"] = 0;
 		self::$prodList[0]["ital"] = 0;
@@ -56,7 +53,7 @@ class conf
 		self::$prodList[1]["idid"] = "artB";
 		self::$prodList[1]["titl"] = "Großbuchstaben";
 		self::$prodList[1]["size"] = 2;
-		self::$prodList[1]["pric"] = 1.45;
+		self::$prodList[1]["pric"] = 1.15;
 		self::$prodList[1]["uppe"] = 1;
 		self::$prodList[1]["lowe"] = 0;
 		self::$prodList[1]["ital"] = 0;
@@ -67,7 +64,7 @@ class conf
 		self::$prodList[2]["idid"] = "artC";
 		self::$prodList[2]["titl"] = "Großbuchstaben";
 		self::$prodList[2]["size"] = 3;
-		self::$prodList[2]["pric"] = 1.95;
+		self::$prodList[2]["pric"] = 1.65;
 		self::$prodList[2]["uppe"] = 1;
 		self::$prodList[2]["lowe"] = 0;
 		self::$prodList[2]["ital"] = 0;
@@ -78,7 +75,7 @@ class conf
 		self::$prodList[3]["idid"] = "artD";
 		self::$prodList[3]["titl"] = "Groß- und Kleinbuchstaben";
 		self::$prodList[3]["size"] = 5.6;
-		self::$prodList[3]["pric"] = 3.95;
+		self::$prodList[3]["pric"] = 3.4;
 		self::$prodList[3]["uppe"] = 0;
 		self::$prodList[3]["lowe"] = 0;
 		self::$prodList[3]["ital"] = 0;
@@ -89,7 +86,7 @@ class conf
 		self::$prodList[4]["idid"] = "artE";
 		self::$prodList[4]["titl"] = "Kleinbuchstaben";
 		self::$prodList[4]["size"] = 2.5;
-		self::$prodList[4]["pric"] = 1.65;
+		self::$prodList[4]["pric"] = 1.25;
 		self::$prodList[4]["uppe"] = 0;
 		self::$prodList[4]["lowe"] = 1;
 		self::$prodList[4]["ital"] = 0;
@@ -100,7 +97,7 @@ class conf
 		self::$prodList[5]["idid"] = "artF";
 		self::$prodList[5]["titl"] = "Kursive Buchstaben";
 		self::$prodList[5]["size"] = 2.6;
-		self::$prodList[5]["pric"] = 1.95;
+		self::$prodList[5]["pric"] = 1.45;
 		self::$prodList[5]["uppe"] = 1;
 		self::$prodList[5]["lowe"] = 0;
 		self::$prodList[5]["ital"] = 1;
@@ -109,7 +106,7 @@ class conf
 		self::$prodList[5]["symb"] = ".-@!?+&%()\"";
 
 		self::$opti["cost"] = 4.9;
-		self::$opti["leng"] = 15;
+		self::$opti["leng"] = 20;
 
 		self :: getOrderOptions();
 	}
@@ -117,18 +114,6 @@ class conf
 	public static function checMobi()
 	{
 		return self::$mobiDete -> isMobile();
-	}
-
-	/**
-	 * Get mail configuration
-	 * @return array Mail configuration array
-	 */
-	private static function getMailConfig(): array
-	{
-		if (self::$mailConfig === null) {
-			self::$mailConfig = require(__DIR__ . '/mailConf.php');
-		}
-		return self::$mailConfig;
 	}
 
 	public static function getProdList()
@@ -316,11 +301,11 @@ class conf
 			$respItemList[$i]["PRICCHAR"] = number_format($respItemList[$i]["pricchar"], 2, ",", " ");
 
 			/// Price pro Folie
-			$respItemList[$i]["pricfoil"] = ($respItemList[$i]["foil"]) ? (self :: getFoilPric($char, $foilPric, 15)) : (0.00);
+			$respItemList[$i]["pricfoil"] = ($respItemList[$i]["foil"]) ? (self :: getFoilPric($char, $foilPric, 20)) : (0.00);
 			$respItemList[$i]["PRICFOIL"] = number_format($respItemList[$i]["pricfoil"], 2, ",", " ");
 
 			/// Preis pro WahreLänge
-			$respItemList[$i]["prictrue"] = ($respItemList[$i]["true"] == "true") ? (self :: getFoilPric($char, 9.9, 15)) : (0.00);
+			$respItemList[$i]["prictrue"] = ($respItemList[$i]["true"] == "true") ? (self :: getFoilPric($char, 9.9, 20)) : (0.00);
 			$respItemList[$i]["PRICTRUE"] = number_format($respItemList[$i]["prictrue"], 2, ",", " ");
 
 			/// Gesamtpreis pro Schriftzug
@@ -608,22 +593,8 @@ class conf
 
 	/*---------------------------------------------------------------------------------------------------------------------------------------------------------*/
 	/// E-Mail
-	
-	/**
-	 * Escape HTML for safe email output
-	 * @param string $text Text to escape
-	 * @return string Escaped text
-	 */
-	private static function escapeHtml(string $text): string
-	{
-		return htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
-	}
-	
 	public static function senConfMess()
 	{
-		// Generate order number
-		$orderNumber = self :: getNextOrderNumber();
-		
 		$vendData = self :: getVendData();
 		$userData = self :: getUserData();
 		$shipData = self :: getLandData();
@@ -676,7 +647,7 @@ class conf
 			$mailBody .= "<td style='font-size: 20px; text-align: right;'>Preis</td>";
 			$mailBody .= "</tr>";
 			$mailBody .= "<tr>";
-			$mailBody .= "<td>Bestellte Buchstaben: " . self::escapeHtml($itemData["CHAR"]) . "{$nl}</td>";
+			$mailBody .= "<td>Bestellte Buchstaben: {$itemData["CHAR"]}{$nl}</td>";
 			$mailBody .= "<td style='font-size: 20px; text-align: right;'>{$itemData["PRICSUMM"]} €{$nl}</td>";
 			$mailBody .= "</tr>";
 			$mailBody .= "<tr>";
@@ -698,7 +669,7 @@ class conf
 				$mailBody .= "<td>Schriftzeichen:</td>";
 				$mailBody .= "</tr>";
 				$mailBody .= "<tr>";
-				$mailBody .= "<td><pre>" . self::escapeHtml($itemData["CHAR"]) . "</pre></td>";
+				$mailBody .= "<td><pre>{$itemData["CHAR"]}</pre></td>";
 				$mailBody .= "</tr>";
 			}
 
@@ -782,27 +753,27 @@ class conf
 		$mailBody .= "</tr>";
 		$mailBody .= "<tr>";
 		$mailBody .= "	<td style=''>Firma: </td>";
-		$mailBody .= "	<td style=''>" . self::escapeHtml($userData["firm"]) . "</td>";
+		$mailBody .= "	<td style=''>{$userData["firm"]}</td>";
 		$mailBody .= "</tr>";
 		$mailBody .= "<tr>";
 		$mailBody .= "	<td style=''>Name: </td>";
-		$mailBody .= "	<td style=''>" . self::escapeHtml($userData["fnam"]) . " " . self::escapeHtml($userData["lnam"]) . "</td>";
+		$mailBody .= "	<td style=''>{$userData["fnam"]} {$userData["lnam"]}</td>";
 		$mailBody .= "</tr>";
 		$mailBody .= "<tr>";
 		$mailBody .= "	<td style='vertical-align: top;'>Anschrift:	</td>";
-		$mailBody .= "	<td style=''>" . self::escapeHtml($userData["stre"]) . " " . self::escapeHtml($userData["hous"]) . "<br>" . self::escapeHtml($userData["post"]) . " " . self::escapeHtml($userData["city"]) . "</td>";
+		$mailBody .= "	<td style=''>{$userData["stre"]} {$userData["hous"]}<br>{$userData["post"]} {$userData["city"]}</td>";
 		$mailBody .= "</tr>";
 		$mailBody .= "<tr>";
 		$mailBody .= "	<td style=''>Land: </td>";
-		$mailBody .= "	<td style=''>" . self::escapeHtml($userData["land"]) . "</td>";
+		$mailBody .= "	<td style=''>{$userData["land"]}</td>";
 		$mailBody .= "</tr>";
 		$mailBody .= "<tr>";
 		$mailBody .= "	<td style=''>Telefon: </td>";
-		$mailBody .= "	<td style=''>" . self::escapeHtml($userData["phon"]) . "</td>";
+		$mailBody .= "	<td style=''>{$userData["phon"]}</td>";
 		$mailBody .= "</tr>";
 		$mailBody .= "<tr>";
 		$mailBody .= "	<td style=''>E-Mail: </td>";
-		$mailBody .= "	<td style=''>" . self::escapeHtml($userData["emai"]) . "</td>";
+		$mailBody .= "	<td style=''>{$userData["emai"]}</td>";
 		$mailBody .= "</tr>";
 		$mailBody .= "<tr>";
 		$mailBody .= "	<td style=''>{$nl}</td>";
@@ -815,19 +786,14 @@ class conf
 		/// E-Mail HEAD
 		/// Käufer
 		$userHead = "";
-		$userHead .= "Hallo " . self::escapeHtml($userData["fnam"]) . " " . self::escapeHtml($userData["lnam"]) . ",{$nl}";
+		$userHead .= "Hallo {$userData["fnam"]} {$userData["lnam"]},{$nl}";
 		$userHead .= "{$nl}";
-		$userHead .= "vielen Dank für Ihre Bestellung im MBD-Chromshop.{$nl}";
-		$userHead .= "Ihre Bestellnummer: <b>" . self::escapeHtml($orderNumber) . "</b>{$nl}";
-		$userHead .= "{$nl}";
-		$userHead .= "Diese Artikel wurden bestellt:{$nl}";
+		$userHead .= "vielen Dank für Ihre Bestellung im MBD-Chromshop. Diese Artikel wurden bestellt:{$nl}";
 		$userHead .= "{$nl}";
 
 		/// Händler
 		$vendHead = "";
 		$vendHead .= "Hallo {$vendData["firm"]},{$nl}";
-		$vendHead .= "{$nl}";
-		$vendHead .= "Neue Bestellung eingegangen - Bestellnummer: <b>" . self::escapeHtml($orderNumber) . "</b>{$nl}";
 		$vendHead .= "{$nl}";
 		$vendHead .= "folgende Artikel wurden bestellt:{$nl}";
 		$vendHead .= "{$nl}";
@@ -839,7 +805,7 @@ class conf
 		if($userData["comm"])
 		{
 			$userFoot .= "Sie haben die folgenden zusätzlichen Daten zu Ihrer Bestellung angegeben:{$nl}";
-			$userFoot .= self::escapeHtml($userData["comm"]) . "{$nl}";
+			$userFoot .= "{$userData["comm"]}{$nl}";
 			$userFoot .= "{$nl}";
 		}
 
@@ -917,7 +883,7 @@ EOT;*/
 		{
 			$vendFoot .= "<hr>{$nl}";
 			$vendFoot .= "Der Kunde hat folgende Daten zu seiner Bestellung angegeben:{$nl}";
-			$vendFoot .= self::escapeHtml($userData["comm"]) . "{$nl}";
+			$vendFoot .= "{$userData["comm"]}{$nl}";
 			$vendFoot .= "{$nl}";
 		}
 
@@ -943,9 +909,9 @@ EOT;*/
 		// $vendFoot .= "www.chrombeschriftung.de{$nl}";
 		// $vendFoot .= "{$nl}";
 
-		$userSubj = "Ihre Beschriftung wurde bestellt - Bestellnummer: {$orderNumber}";
+		$userSubj = "Ihre Beschriftung wurde bestellt";
 
-		$vendSubj = "Neuer Bestellvorgang - Bestellnummer: {$orderNumber}";
+		$vendSubj = "Neuer Bestellvorgang";
 
 
 
@@ -953,7 +919,7 @@ EOT;*/
 
 
 		/// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-		$urlChain = array_slice(explode("/", (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on" || ($_SERVER["SERVER_PORT"] ?? 0) == 443 ? "https://" : "http://") . ($_SERVER["SERVER_NAME"] ?? "") . ($_SERVER["PHP_SELF"] ?? "")), 0, -1);
+		$urlChain = array_slice(explode("/", (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on" || $_SERVER["SERVER_PORT"] == 443 ? "https://" : "http://") . $_SERVER["SERVER_NAME"] . $_SERVER["PHP_SELF"]), 0, -1);
         $urlChain[] = "..";
         $urlChain[] = "Portal";
         $urlChain[] = "put.php";
@@ -1011,13 +977,24 @@ EOT;*/
 		/**************************************************************************************************/
 
     //Mail an User
-    $mailConfig = self :: getMailConfig();
+    $mailHost = "smtp.strato.de";
+    $mailuser = "bestellung@chrombeschriftung.de";       //Username Mailversand
+    $mailfrom = "bestellung@chrombeschriftung.de";         //Absendermail
+    $mailfromPass = "MBDim140212";                     //Passwort Mailversand
+    $mailLang = "de";                                 //Sprache Mailversand
+    $replayMail = "bestellung@chrombeschriftung.de";                          //Antwortmail
+    $MailCharSet = "utf-8";                           //Charset Mail
+    $MailPort = 587;                                  //Port Mail
+    $MailSMTP_Secure = "tls";                         //Mail Security
+    $MailEncoding = "quoted-printable";               //Mail Codierung
     $mailTo = $userData["emai"];
+    $distributor_mail = "bestellung@chrombeschriftung.de";
+    $distributor_name = "MBD-ChromShop";
     $mailBodySend = $userHead . $mailBody . $userFoot;
     $mailSubj = $userSubj;
 
     self :: $newMail -> IsSMTP();                                         //es wird SMTP benutzt, also ein anderer Mailserver (außerhalb)
-    self :: $newMail -> SMTPDebug = $mailConfig['debug'];
+    self :: $newMail -> SMTPDebug = 0;
 
     /**********************************************************************************************************************************************
 
@@ -1032,22 +1009,22 @@ EOT;*/
      $isSuccessed = false;
 
 
-    self :: $newMail ->  Host = $mailConfig['host'];
+    self :: $newMail ->  Host = $mailHost;
     self :: $newMail ->  SMTPAuth = true;
-    self :: $newMail ->  Username = $mailConfig['username'];
-    self :: $newMail ->  Password = $mailConfig['password'];
-    self :: $newMail ->  SMTPSecure = $mailConfig['secure'];
-    self :: $newMail ->  Port = $mailConfig['port'];
+    self :: $newMail ->  Username = $mailuser;
+    self :: $newMail ->  Password = $mailfromPass;
+    self :: $newMail ->  SMTPSecure = $MailSMTP_Secure;
+    self :: $newMail ->  Port = $MailPort;
     self :: $newMail ->  isHTML( true );
 
-  	self :: $newMail ->  CharSet = $mailConfig['charset'];
-  	self :: $newMail ->  SetLanguage($mailConfig['language']);
-  	self :: $newMail ->  Encoding = $mailConfig['encoding'];
+  	self :: $newMail ->  CharSet = $MailCharSet;
+  	self :: $newMail ->  SetLanguage($mailLang);
+  	self :: $newMail ->  Encoding = $MailEncoding;
     self :: $newMail ->  AddAddress($mailTo);
 
-  	self :: $newMail ->  From     = $mailConfig['from'];
-  	self :: $newMail ->  FromName = $mailConfig['fromName'];
-  	self :: $newMail ->  AddReplyTo($mailConfig['replyTo'], $mailConfig['fromName']);
+  	self :: $newMail ->  From     = $mailfrom;
+  	self :: $newMail ->  FromName = $distributor_name;
+  	self :: $newMail ->  AddReplyTo($replayMail, $distributor_name);
   	self :: $newMail ->  Subject 	= $mailSubj;
   	self :: $newMail -> Body 	= $mailBodySend;
     self :: $newMail ->  addAttachment("../AGB.pdf", "AGB", "base64", "application/pdf");
@@ -1076,19 +1053,19 @@ EOT;*/
 
 
   //Mail an Betreiber
-  $mailTo = $mailConfig['distributorMail'];
+  $mailTo = $vendData["emai"];
   //$mailTo = "igor.papeta@psygonis.de";
   $mailBodySend = $vendHead . $mailBody . $vendFoot;
   $mailSubj = $vendSubj;
   $replayMail = $userData["emai"];
   $mailFrom =  $userData["emai"];
 
-	self :: $newMail ->  CharSet=$mailConfig['charset'];
-	self :: $newMail ->  SetLanguage($mailConfig['language']);
-	self :: $newMail ->  Encoding = $mailConfig['encoding'];
+	self :: $newMail ->  CharSet=$MailCharSet;
+	self :: $newMail ->  SetLanguage($mailLang);
+	self :: $newMail ->  Encoding = $MailEncoding;
   self :: $newMail ->  AddAddress($mailTo);
 
-	self :: $newMail ->  From     = $mailConfig['from'];
+	self :: $newMail ->  From     = $mailfrom;
 	self :: $newMail ->  FromName = "";
 	self :: $newMail ->  AddReplyTo($replayMail);
 	self :: $newMail ->  Subject 	= $mailSubj;
@@ -1167,9 +1144,9 @@ EOT;*/
 			/// Währung
 			$paypParaList["currency_code"]  = "EUR";
 			/// Erfolgsurl
-			$paypParaList["return"]			= "http://" . ($_SERVER["HTTP_HOST"] ?? "") . ($_SERVER["REQUEST_URI"] ?? "") . "&pay=suc";
+			$paypParaList["return"]			= "http://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"] . "&pay=suc";
 			/// Abbruchsurl
-			$paypParaList["cancel_return"] 	= "http://" . ($_SERVER["HTTP_HOST"] ?? "") . strtok(($_SERVER["REQUEST_URI"] ?? ""), "?");
+			$paypParaList["cancel_return"] 	= "http://" . $_SERVER["HTTP_HOST"] . strtok($_SERVER["REQUEST_URI"], "?");
 
 			echo "<!DOCTYPE html><html>";
 			echo "<head><script>window.onload = function(){document.getElementById('form').submit();}</script></head>";
@@ -1219,47 +1196,6 @@ EOT;*/
 	public static function cleItemData()
 	{
 		unset($_SESSION["itemList"]);
-	}
-
-	/**
-	 * Generate next order number with prefix C-
-	 * @return string Order number (e.g., C-1000, C-1001)
-	 */
-	public static function getNextOrderNumber(): string
-	{
-		$counterFile = __DIR__ . '/order_counter.json';
-		
-		// Lock file for concurrent access
-		$lockFile = $counterFile . '.lock';
-		$lock = fopen($lockFile, 'w');
-		if (!flock($lock, LOCK_EX)) {
-			fclose($lock);
-			throw new Exception('Could not acquire lock for order counter');
-		}
-		
-		try {
-			// Read current counter
-			if (file_exists($counterFile)) {
-				$data = json_decode(file_get_contents($counterFile), true);
-			} else {
-				$data = ['currentNumber' => 1000, 'prefix' => 'C-', 'lastUpdated' => null];
-			}
-			
-			// Generate order number
-			$orderNumber = $data['prefix'] . $data['currentNumber'];
-			
-			// Increment counter
-			$data['currentNumber']++;
-			$data['lastUpdated'] = date('Y-m-d H:i:s');
-			
-			// Save updated counter
-			file_put_contents($counterFile, json_encode($data, JSON_PRETTY_PRINT));
-			
-			return $orderNumber;
-		} finally {
-			flock($lock, LOCK_UN);
-			fclose($lock);
-		}
 	}
 }
 ?>

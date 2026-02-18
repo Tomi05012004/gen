@@ -565,8 +565,8 @@ var showCost = function()
 	// console.log(attachFoilPrice);
 	
 	
-	var infoAttachFoilPrice = charNumb ? 4.90 * Math.ceil(charNumb / 15) : 4.90;
-	var infoTrueLengthPrice = charNumb ? 9.90 * Math.ceil(charNumb / 15) : 9.90;
+	var infoAttachFoilPrice = charNumb ? 4.90 * Math.ceil(charNumb / 20) : 4.90;
+	var infoTrueLengthPrice = charNumb ? 9.90 * Math.ceil(charNumb / 20) : 9.90;
 	// document.getElementById('foilPric').innerHTML = foilData.getFoilPric(opti.text).toFixed(2).replace(".", ",");
 	// document.getElementById('pric').innerHTML = charCost.toFixed(2).replace(".", ",");
 	

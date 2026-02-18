@@ -1,6 +1,4 @@
 <?php
-declare(strict_types=1);
-
 /**
  * Mobile Detect Library
  * =====================
@@ -1226,13 +1224,7 @@ class Mobile_Detect
      */
     public function match($regex, $userAgent = null)
     {
-        // Ensure userAgent is a string to prevent TypeError in preg_match
-        $ua = (false === empty($userAgent) ? $userAgent : $this->userAgent);
-        if ($ua === null) {
-            $ua = '';
-        }
-        
-        $match = (bool) preg_match(sprintf('#%s#is', $regex), $ua, $matches);
+        $match = (bool) preg_match(sprintf('#%s#is', $regex), (false === empty($userAgent) ? $userAgent : $this->userAgent), $matches);
         // If positive match is found, store the results for debug.
         if ($match) {
             $this->matchingRegex = $regex;

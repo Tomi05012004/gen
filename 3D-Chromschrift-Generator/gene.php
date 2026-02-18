@@ -1,145 +1,108 @@
 <?php
-declare(strict_types=1);
-
-// Configure session security
-ini_set('session.cookie_httponly', '1');
-ini_set('session.use_only_cookies', '1');
-ini_set('session.cookie_secure', '0'); // Set to '1' if using HTTPS
-
 session_start();
+
+$phpMailerVersion = "PHPMailer_6_1_6";
+$path = "../{$phpMailerVersion}/{$phpMailerVersion}";
+require $path.'/src/Exception.php';
+require $path.'/src/PHPMailer.php';
+require $path.'/src/SMTP.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
+$mail = new PHPMailer(true);
 
 require_once("conf.php");
 require_once("face_old.php");
-
-/**
- * Sanitize user input to prevent XSS attacks
- * @param string $data User input
- * @return string Sanitized input
- */
-function sanitizeInput(string $data): string {
-    $data = trim($data);
-    $data = stripslashes($data);
-    $data = htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
-    return $data;
-}
-
-/**
- * Sanitize array of inputs
- * @param array $data Array of user inputs
- * @return array Sanitized inputs
- */
-function sanitizeArray(array $data): array {
-    return array_map('sanitizeInput', $data);
-}
-
-/**
- * Escape string for safe use in JavaScript
- * @param string $data Data to escape
- * @return string Escaped data (without quotes)
- */
-function escapeJs(string $data): string {
-    return trim(json_encode($data, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT), '"');
-}
 
 $face = new face("auto"); 
 
 $version = 3;
 
 conf :: init();
+/// prüfe ob Mobilgerät
+
+conf :: setInstanz($mail);
 
 /// prüfe ob Mobilgerät
 $opti = conf :: $opti;
 $checkBox = conf :: $checkBox;
-$fram = (!empty($_GET["fram"]) && sanitizeInput($_GET["fram"]) == "t") ? (true) : (false);
+$fram = (!empty($_GET["fram"]) && $_GET["fram"] == "t") ? (true) : (false);
 
 /// ob mobile Seite
 $mobi = conf :: checMobi();
 /// welches Modul
-$site = (empty($_GET["mod"])) ? ("edt") : (sanitizeInput($_GET["mod"]));
+$site = (empty($_GET["mod"])) ? ("edt") : ($_GET["mod"]);
 /// 
 $itemPosi = -1;
 
 /// verarbete POST Daten
-if(($_SERVER["REQUEST_METHOD"] ?? "") == "POST" && !empty($_POST["acti"]))
+if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 {
 	
 	if($_POST["acti"] == "add")
 	{
-		if(intval($_POST["posi"] ?? -1) > -1)
+		if(intval($_POST["posi"]) > -1)
 		{
-			conf :: ediItem(intval($_POST["posi"] ?? -1), "font", $_POST["font"] ?? "");
-			conf :: ediItem(intval($_POST["posi"] ?? -1), "text", $_POST["text"] ?? "");
-			conf :: ediItem(intval($_POST["posi"] ?? -1), "char", $_POST["char"] ?? "");
-			conf :: ediItem(intval($_POST["posi"] ?? -1), "foil", $_POST["foil"] ?? "");
-			conf :: ediItem(intval($_POST["posi"] ?? -1), "true", $_POST["true"] ?? "");
-			conf :: ediItem(intval($_POST["posi"] ?? -1), "foilLength", $_POST["leng"] ?? "");
+			conf :: ediItem(intval($_POST["posi"]), "font", $_POST["font"]);
+			conf :: ediItem(intval($_POST["posi"]), "text", $_POST["text"]);
+			conf :: ediItem(intval($_POST["posi"]), "char", $_POST["char"]);
+			conf :: ediItem(intval($_POST["posi"]), "foil", $_POST["foil"]);
+			conf :: ediItem(intval($_POST["posi"]), "true", $_POST["true"]);
+			conf :: ediItem(intval($_POST["posi"]), "foilLength", $_POST["leng"]);
 		}
 		else
 		{
-			$foilValue = $_POST["foil"] ?? false;
-			settype($foilValue, "boolean");
-			conf :: addItem($_POST["font"] ?? "", $_POST["text"] ?? "", $_POST["char"] ?? "", $foilValue, $_POST["true"] ?? "", $_POST["leng"] ?? "");
+			settype($_POST["foil"], "boolean");
+			conf :: addItem($_POST["font"], $_POST["text"], $_POST["char"], $_POST["foil"], $_POST["true"], $_POST["leng"]);
 		}
 		
 		/// leite an sich selbst weiter (um Informationsdoppelsenden zu vermeiden)
-		header("Location: " . ($_SERVER["REQUEST_URI"] ?? ""));
+		header("Location: {$_SERVER["REQUEST_URI"]}");
 	}
 	else if($_POST["acti"] == "num")
 	{
-		conf :: ediItem(intval($_POST["posi"] ?? -1), "coun", intval($_POST["coun"] ?? 1));
+		conf :: ediItem(intval($_POST["posi"]), "coun", intval($_POST["coun"]));
 		/// leite an sich selbst weiter (um Informationsdoppelsenden zu vermeiden)
-		header("Location: " . ($_SERVER["REQUEST_URI"] ?? ""));
+		header("Location: {$_SERVER["REQUEST_URI"]}");
 	}
 	else if($_POST["acti"] == "del")
 	{
-		conf :: delItem(intval($_POST["posi"] ?? -1));
+		conf :: delItem(intval($_POST["posi"]));
 		/// leite an sich selbst weiter (um Informationsdoppelsenden zu vermeiden)
-		header("Location: " . ($_SERVER["REQUEST_URI"] ?? ""));
+		header("Location: {$_SERVER["REQUEST_URI"]}");
 	}
 	/// Vaersandsland geändert
 	else if($_POST["acti"] == "lnd")
 	{
-		conf :: setLandPosi(intval($_POST["land"] ?? 0));
+		conf :: setLandPosi(intval($_POST["land"]));
 		$landData = conf :: getLandData();
-		conf :: setOrderOptionValue("order.options-rapid.processing", ($_POST["rapidProcessing"] ?? "false") == "true" ? true : false);
-		conf :: setUserData($_POST["firm"] ?? "", $_POST["fnam"] ?? "", $_POST["lnam"] ?? "", $_POST["stre"] ?? "", $_POST["hous"] ?? "", $_POST["post"] ?? "", $_POST["city"] ?? "", $landData["LAND"], $_POST["phon"] ?? "", $_POST["emai"] ?? "", $_POST["comm"] ?? "", $_POST["paym"] ?? "");
+		conf :: setOrderOptionValue("order.options-rapid.processing", $_POST["rapidProcessing"] == "true" ? true : false);
+		conf :: setUserData($_POST["firm"], $_POST["fnam"], $_POST["lnam"], $_POST["stre"], $_POST["hous"], $_POST["post"], $_POST["city"], $landData["LAND"], $_POST["phon"], $_POST["emai"], $_POST["comm"], $_POST["paym"]);
 		/// leite an sich selbst weiter (um Informationsdoppelsenden zu vermeiden)
-		header("Location: " . ($_SERVER["REQUEST_URI"] ?? ""));
+		header("Location: {$_SERVER["REQUEST_URI"]}");
 	}
 	/// Artikel gekauft
 	else if($_POST["acti"] == "usr")
 	{
-		$phpMailerVersion = "PHPMailer_6_10_0";
-		$path = "../{$phpMailerVersion}/{$phpMailerVersion}";
-		if (!file_exists($path.'/src/PHPMailer.php')) {
-			die("<h3>Das E-Mail-System ist nicht verfügbar. Bitte kontaktieren Sie unseren Supportdienst.<h3>");
-		}
-		require_once $path.'/src/Exception.php';
-		require_once $path.'/src/PHPMailer.php';
-		require_once $path.'/src/SMTP.php';
-
-		$mail = new PHPMailer\PHPMailer\PHPMailer(true);
-		conf :: setInstanz($mail);
-
-		$landData = conf :: getLandData($_POST["firm"] ?? "");
-		conf :: setOrderOptionValue("order.options-rapid.processing", ($_POST["rapidProcessing"] ?? "false") == "true" ? true : false);
-		conf :: setUserData($_POST["firm"] ?? "", $_POST["fnam"] ?? "", $_POST["lnam"] ?? "", $_POST["stre"] ?? "", $_POST["hous"] ?? "", $_POST["post"] ?? "", $_POST["city"] ?? "", $landData["LAND"], $_POST["phon"] ?? "", $_POST["emai"] ?? "", $_POST["comm"] ?? "", $_POST["paym"] ?? "");
+		$landData = conf :: getLandData($_POST["firm"]);
+		conf :: setOrderOptionValue("order.options-rapid.processing", $_POST["rapidProcessing"] == "true" ? true : false);
+		conf :: setUserData($_POST["firm"], $_POST["fnam"], $_POST["lnam"], $_POST["stre"], $_POST["hous"], $_POST["post"], $_POST["city"], $landData["LAND"], $_POST["phon"], $_POST["emai"], $_POST["comm"], $_POST["paym"]);
 		/// prüfe und versende E-Mail
 		if(!conf :: senConfMess())
 		{
-			die("<h3>Bei dem Versenden des E-Mails ist ein Fehler aufgetreten. Bitte versuchen Sie die Seite neu zu laden oder kontaktieren Sie unsere Supportdienst.<h3>");
+			die("<h3>Bei dem Versenden des E-Mails ist ein Fehler augetretten. Bitte versuchen Sie die Seite neu zu laden oder kontaktieren Sie unsere Supportdienst.<h3>");
 		}
-		/// Regenerate session ID for security after order submission
-		session_regenerate_id(true);
 		/// leite an PayPal weiter (falls kein PayPal Funktion wird übersprungen)
 		conf :: redPaypSite();
 		/// leite an sich selbst weiter (um Informationsdoppelsenden zu vermeiden)
-		header("Location: " . ($_SERVER["REQUEST_URI"] ?? ""));
+		header("Location: {$_SERVER["REQUEST_URI"]}");
 	}
 	/// Artikel bearbeiten
 	else if($_POST["acti"] == "edi")
 	{
-		$itemPosi = intval($_POST["posi"] ?? -1);
+		$itemPosi = intval($_POST["posi"]);
 	}
 }
 
@@ -155,7 +118,7 @@ switch ($site)
 		$itemEditText = ($itemPosi > -1) ? ($itemList[$itemPosi]["text"]) : ("");
 		$itemEditFont = ($itemPosi > -1) ? ($itemList[$itemPosi]["font"]) : ("artA");
 		$itemEditFoil = ($itemPosi > -1) ? (($itemList[$itemPosi]["foil"]) ? ("true") : ("false")) : ("false");
-		$itemEditTrue = ($itemPosi > -1) ? (($itemList[$itemPosi]["true"] == "true") ? ("document.getElementById('" . escapeJs($checkBox[0]["name"]) . "').click()") : ("")) : ("");
+		$itemEditTrue = ($itemPosi > -1) ? (($itemList[$itemPosi]["true"] == "true") ? ("document.getElementById('{$checkBox[0]["name"]}').click()") : ("")) : ("");
 		break;
 	case "bsk":
 		$itemList = conf :: getItemList();
@@ -191,8 +154,6 @@ echo <<<EOT
 	<head>
 		<!-- Meta -->
 		<meta charset = 'utf-8'>
-		<link rel="icon" type="image/x-icon" href="favicon.ico">
-		<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
 EOT;
 
 /// wenn Mobilgerät sende zusatz Metainformation
@@ -309,7 +270,7 @@ echo <<<EOT
 				<ul style = "margin-top: 0px;">
 					<li>Alle Chrombuchstaben sind "selbstklebend",</li>
 					<li>Jeder Text wird zusammenhängend geliefert (wenn Sie die Trägerfolienanbringung auswählen),</li>
-					<li>Ein Qualitäts-Chrombuchstabe kostet nur ab 1,25 € (Ohne Anbringung auf Trägerfolie - einzeln verpackt),</li>
+					<li>Ein Qualitäts-Chrombuchstabe kostet nur ab 0,95€ (inkl. MwSt.),</li>
 					<li>Kostenlose Lieferung innerhalb Deutschlands,</li>
 					<li>Sie zahlen garantiert nicht mehr als angezeigt.</li>
 				</ul>
@@ -792,7 +753,7 @@ EOT;
 
 
 }
-else if($site == "buy")
+else if($site = "buy")
 {
 	if($paydSucc)
 	{
