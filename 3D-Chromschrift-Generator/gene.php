@@ -60,7 +60,7 @@ $site = (empty($_GET["mod"])) ? ("edt") : (sanitizeInput($_GET["mod"]));
 $itemPosi = -1;
 
 /// verarbete POST Daten
-if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
+if(($_SERVER["REQUEST_METHOD"] ?? "") == "POST" && !empty($_POST["acti"]))
 {
 	
 	if($_POST["acti"] == "add")
@@ -81,19 +81,19 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 		}
 		
 		/// leite an sich selbst weiter (um Informationsdoppelsenden zu vermeiden)
-		header("Location: {$_SERVER["REQUEST_URI"]}");
+		header("Location: " . ($_SERVER["REQUEST_URI"] ?? ""));
 	}
 	else if($_POST["acti"] == "num")
 	{
 		conf :: ediItem(intval($_POST["posi"]), "coun", intval($_POST["coun"]));
 		/// leite an sich selbst weiter (um Informationsdoppelsenden zu vermeiden)
-		header("Location: {$_SERVER["REQUEST_URI"]}");
+		header("Location: " . ($_SERVER["REQUEST_URI"] ?? ""));
 	}
 	else if($_POST["acti"] == "del")
 	{
 		conf :: delItem(intval($_POST["posi"]));
 		/// leite an sich selbst weiter (um Informationsdoppelsenden zu vermeiden)
-		header("Location: {$_SERVER["REQUEST_URI"]}");
+		header("Location: " . ($_SERVER["REQUEST_URI"] ?? ""));
 	}
 	/// Vaersandsland geändert
 	else if($_POST["acti"] == "lnd")
@@ -103,7 +103,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 		conf :: setOrderOptionValue("order.options-rapid.processing", $_POST["rapidProcessing"] == "true" ? true : false);
 		conf :: setUserData($_POST["firm"], $_POST["fnam"], $_POST["lnam"], $_POST["stre"], $_POST["hous"], $_POST["post"], $_POST["city"], $landData["LAND"], $_POST["phon"], $_POST["emai"], $_POST["comm"], $_POST["paym"]);
 		/// leite an sich selbst weiter (um Informationsdoppelsenden zu vermeiden)
-		header("Location: {$_SERVER["REQUEST_URI"]}");
+		header("Location: " . ($_SERVER["REQUEST_URI"] ?? ""));
 	}
 	/// Artikel gekauft
 	else if($_POST["acti"] == "usr")
@@ -133,7 +133,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 		/// leite an PayPal weiter (falls kein PayPal Funktion wird übersprungen)
 		conf :: redPaypSite();
 		/// leite an sich selbst weiter (um Informationsdoppelsenden zu vermeiden)
-		header("Location: {$_SERVER["REQUEST_URI"]}");
+		header("Location: " . ($_SERVER["REQUEST_URI"] ?? ""));
 	}
 	/// Artikel bearbeiten
 	else if($_POST["acti"] == "edi")
