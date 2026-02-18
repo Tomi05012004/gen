@@ -1,0 +1,109 @@
+/* @font-face
+{
+	font-family: 'gravCurs';
+    src: url("http://db.onlinewebfonts.com/t/835e25300f796f9733b967383afa3675.eot");
+    src: url("http://db.onlinewebfonts.com/t/835e25300f796f9733b967383afa3675.eot?#iefix") format("embedded-opentype"),
+    url("http://db.onlinewebfonts.com/t/835e25300f796f9733b967383afa3675.woff2") format("woff2"),
+    url("http://db.onlinewebfonts.com/t/835e25300f796f9733b967383afa3675.woff") format("woff"),
+    url("http://db.onlinewebfonts.com/t/835e25300f796f9733b967383afa3675.ttf") format("truetype"),
+    url("http://db.onlinewebfonts.com/t/835e25300f796f9733b967383afa3675.svg#SnellRoundhand BlackScript") format("svg");
+}
+
+
+
+@font-face
+{
+	font-family: 'gravPrin';
+	src: url("times.ttf") format("truetype");
+} */
+
+
+
+
+
+
+
+/* Arial Extra Bold */
+@font-face
+{
+	font-family: 'genePrin';
+	src: url("5342103/ba7bc8d2-3d72-4d02-b44a-ba1432efbd1f.ttf") format("truetype");
+}
+
+
+/* Arial Bold Italic */
+@font-face
+{
+	font-family: 'geneCurs';
+	src: url("5098471/ab7da51e-8e09-4b72-962e-c5c560f3063e.ttf") format("truetype");
+}
+
+
+/* Times new Roman Medium */
+@font-face
+{
+	font-family: 'gravPrin';
+	src: url("5344033/e088ea37-0097-4b91-a4d9-438c9dbfce10.ttf") format("truetype");
+}
+
+
+/* Snell Roundhand Bold */
+@font-face
+{
+	font-family: 'gravCurs';
+	src: url("5315303/933f9371-c6b2-428e-aff0-0f0ebf1a38ae.ttf") format("truetype");
+}
+
+
+/* @font-face 
+{
+	font-family: "Arial";
+    src: url("http://db.onlinewebfonts.com/t/8d223b3ad8d4819e9dcf22757e4cc2c4.eot");
+    src: url("http://db.onlinewebfonts.com/t/8d223b3ad8d4819e9dcf22757e4cc2c4.eot?#iefix") format("embedded-opentype"),
+    url("http://db.onlinewebfonts.com/t/8d223b3ad8d4819e9dcf22757e4cc2c4.woff2") format("woff2"),
+    url("http://db.onlinewebfonts.com/t/8d223b3ad8d4819e9dcf22757e4cc2c4.woff") format("woff"),
+    url("http://db.onlinewebfonts.com/t/8d223b3ad8d4819e9dcf22757e4cc2c4.ttf") format("truetype"),
+    url("http://db.onlinewebfonts.com/t/8d223b3ad8d4819e9dcf22757e4cc2c4.svg#Arial") format("svg");
+} */
+
+
+
+/***************************************************************************************************
+*
+***************************************************************************************************/
+.PlaceholderHigh::-webkit-input-placeholder
+{ /* Chrome */
+	color: red;
+}
+.PlaceholderHigh:-ms-input-placeholder
+{ /* IE 10+ */
+	color: red;
+}
+.PlaceholderHigh::-moz-placeholder
+{ /* Firefox 19+ */
+	color: red;
+}
+.PlaceholderHigh:-moz-placeholder
+{ /* Firefox 4 - 18 */
+	color: red;
+}
+
+
+
+.PlaceholderLow::-webkit-input-placeholder
+{ /* Chrome */
+	color: blue;
+}
+.PlaceholderLow:-ms-input-placeholder
+{ /* IE 10+ */
+	color: blue;
+}
+.PlaceholderLow::-moz-placeholder
+{ /* Firefox 19+ */
+	color: blue;
+}
+.PlaceholderLow:-moz-placeholder
+{ /* Firefox 4 - 18 */
+	color: blue;
+}
+/**************************************************************************************************/

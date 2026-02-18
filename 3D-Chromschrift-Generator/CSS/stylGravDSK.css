@@ -1,0 +1,673 @@
+body
+{
+	width: 100%;
+	height: 100%; 
+	margin: 0px;
+	padding: 0px;
+	/* background-color: rgba(232,232,232,1.0); */
+	background-color: #171717;
+	font-family: Arial, Helvetica, 'Open Sans';
+	overflow-x: hidden;
+}
+
+#head
+{
+	width: 956px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+#foot > .headTitl
+{
+	font-size: 18px;
+	color: rgb(16, 92, 197);
+	font-weight: normal;
+    font-style: normal;
+    padding: 4px 0;
+	display: inline-block;
+}
+
+#main
+{
+	width: 956px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+
+#foot
+{
+	width: 956px;
+	margin-right: auto;
+	margin-left: auto;
+	color: #ffffff;
+	text-align: center;
+}
+
+
+#prev
+{
+	height: 300px;
+	top: 126px;
+	right: 0px;
+	left: 0px;
+	position:absolute;
+	/* background-color: rgba(0,0,0,1.0); */
+	background-color: #171717;
+}
+
+#prev > .cont
+{
+	top: 0px;
+	right: 0px;
+	bottom: 0px;
+	left: 0px;
+	position:absolute;
+	overflow: hidden;
+}
+
+#prev > .cont > .imag
+{
+	position: absolute;
+	/* width: 900px;
+	margin: -250px 0 0 -150px; */
+}
+
+#prev > .shad
+{
+	top: 130px;
+	left: 400px;
+	margin-top: 0;
+	margin-bottom: 0;
+	position: absolute;
+	display: inline-block;
+	
+	font-size: 64px;
+	font-weight: 600;
+	font-family: Arial;
+	color: #000;
+	text-shadow: 1px 1px 1px #444;
+}
+
+.shad
+{
+	
+}
+
+#prev > .text
+{
+	top: 130px;
+	left: 400px;
+	margin-top: 0;
+	margin-bottom: 0;
+	padding-right: 48px;
+	padding-left: 72px;
+	position: absolute;
+	display: inline-block;
+	
+	font-size: 64px;
+	font-weight: 600;
+	font-family: Arial;
+	
+}
+
+.text
+{
+	color: #B7B7B7;
+	background: -webkit-linear-gradient(#fff, #ddd, #777);
+	-webkit-background-clip: text;
+	text-fill-color: transparent;
+	-webkit-text-fill-color: transparent;
+	-moz-text-fill-color: transparent;
+	-o-text-fill-color: transparent;
+	-ms-text-fill-color: transparent;
+}
+
+
+.textGold
+{
+	color: #E0C324;
+	background: -webkit-linear-gradient(#fff, #dd5, #773);
+	-webkit-background-clip: text;
+	text-fill-color: transparent;
+	-webkit-text-fill-color: transparent;
+	-moz-text-fill-color: transparent;
+	-o-text-fill-color: transparent;
+	-ms-text-fill-color: transparent;
+}
+
+.textBronze
+{
+	color: #d29426;
+	background: -webkit-linear-gradient(#f0e3ca, #d29426, #603e00);
+	-webkit-background-clip: text;
+	text-fill-color: transparent;
+	-webkit-text-fill-color: transparent;
+	-moz-text-fill-color: transparent;
+	-o-text-fill-color: transparent;
+	-ms-text-fill-color: transparent;
+}
+
+.textBlack
+{
+	color: #000000;
+	background: -webkit-linear-gradient(#ffffff, #131313, #000000);
+	-webkit-background-clip: text;
+	text-fill-color: transparent;
+	-webkit-text-fill-color: transparent;
+	-moz-text-fill-color: transparent;
+	-o-text-fill-color: transparent;
+	-ms-text-fill-color: transparent;
+}
+
+
+#info
+{
+	/* margin: 300px 0 0 0;
+	text-align: center;
+	background-color: rgba(204,204,204,1.0);
+	box-shadow: 0px 1px 0px 0px rgba(0,0,0,1.0) inset; */
+	text-align: center;
+	background-color: rgba(232,232,232,1.0);
+	box-shadow: 0px 1px 0px 0px rgba(32,32,32,1.0) inset;
+}
+
+#info > .sele
+{
+	padding: 8px;
+	text-align: left;
+	display: inline-block;
+	box-shadow: 0px 1px 0px 0px rgba(32,32,32,1.0) inset;
+	vertical-align: top;
+	/* float: left; */
+}
+
+#info > .sele > ul
+{
+	margin: 2px 0 4px 0;
+	padding: 0 0 0 0;
+    line-height: 26px;
+	list-style-type: none;
+	font-size: 16px;
+	font-weight: 600;
+}
+
+#info > .sele > ul > li
+{
+	display: inline-block;
+}
+
+#info > .sele > ul + span
+{
+	font-size: 18px;
+	line-height: 36px;
+}
+
+/* #info > .sele > #leng
+{
+	line-height: 36px;
+	font-weight: 600;
+	color: rgba(32,216,0,1.0);
+}
+
+#info > .sele > #leng + span
+{
+	line-height: 36px;
+	font-weight: 600;
+	color: rgba(32,216,0,1.0);
+} */
+
+#info > .conf > div > #leng
+{
+	line-height: 36px;
+	font-weight: 600;
+	color: rgba(32,216,0,1.0);
+}
+
+#info > .conf > div > #leng + span
+{
+	line-height: 36px;
+	font-weight: 600;
+	color: rgba(32,216,0,1.0);
+}
+
+#info > .plac
+{
+	margin: 0 5% 0 5%;
+	display: inline-block;
+	box-shadow: 0px 1px 0px 0px rgba(32,32,32,1.0) inset;
+	vertical-align: top;
+}
+
+#info > .conf
+{
+	padding: 8px;
+	text-align: left;
+	display: inline-block;
+	box-shadow: 0px 1px 0px 0px rgba(32,32,32,1.0) inset;
+	vertical-align: top;
+}
+
+#info > .conf > div > span:nth-child(6)
+{
+	font-size: 18px;
+}
+
+#info > .conf > div > #pric
+{
+	color: rgba(32,216,0,1.0);
+	font-size: 32px;
+	font-weight: 600;
+}
+
+#info > .conf > div > #pric + span
+{
+	color: rgba(32,216,0,1.0);
+	font-size: 32px;
+	font-weight: 600;
+}
+
+#info > .conf > div > span:nth-child(11)
+{
+	font-size: 12px;
+}
+
+#info > .conf > form
+{
+	display: inline-block;
+}
+
+#info > .conf > button,
+#info > .conf > form > button
+{
+	margin: 8px 0 0 0;
+	padding: 4px;
+	font-size: 16px;
+}
+
+#info > .inpu
+{
+	clear: both;
+}
+
+#info > .inpu > #inpu
+{
+	width: calc(100% - 32px);
+	margin: 16px;
+	font-size: 22px;
+	border-width: 0;
+	border-radius: 3px;
+}
+
+.fontInfo
+{
+	text-align: center;
+}
+
+#fontInfoTitl
+{
+	padding: 8px;
+	font-size: 16px;
+	font-weight: 600;
+}
+
+#fontInfoTitl + div
+{
+	padding: 8px;
+	font-size: 16px;
+}
+
+#font
+{
+	/* background-color: rgba(232,232,232,1.0); */
+	margin-top: 300px;
+	text-align: center;
+	background-color: rgba(204,204,204,1.0);
+	box-shadow: 0px 1px 0px 0px rgba(32,32,32,1.0) inset;
+}
+
+#font > .tile
+{
+	/* width:260px; */
+	margin: 6px;
+	box-shadow: 0 0 1px rgba(16,16,16,1.0) inset;
+	font-size: 14px;
+	/* float: left; */
+	display:inline-block;
+	cursor: pointer;
+}
+
+#font > .tile:hover
+{
+	background-color: rgba(216,216,232,1.0);
+}
+
+#font > .tile > .imag
+{
+	font-size:0;
+	float: left;
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#font > .tile > div:nth-child(2)
+{
+	line-height: 28px;
+	font-weight:600;
+}
+
+#font > .inpu
+{
+	clear: both;
+}
+
+#font > .inpu > #inpu
+{
+	width: calc(100% - 32px);
+	margin: 16px;
+	font-size: 22px;
+	border-width: 0;
+	border-radius: 3px;
+}
+
+.fo18
+{
+	font-size: 18px;
+}
+
+/*---------------------------------------------------------------------------------------------------------------------------------------------------------*/
+/* Warenkorbtabelle */
+.itemList
+{
+	background-color: rgba(232,232,232,1.0);
+	box-shadow: 0px 1px 0px 0px rgba(32,32,32,1.0) inset;
+}
+
+.itemTabl
+{
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.itemLabe
+{
+	font-weight: 600;
+	padding: 8px 0;
+	background-color: rgba(204,204,204,1.0);
+	/* border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-bottom-color: rgba(204,204,204,1.0); */
+	box-shadow: 0px -1px 0px 0px rgba(32,32,32,1.0) inset;
+}
+
+.itemValu
+{
+	
+}
+
+tr > .itemValu:nth-child(1)
+{
+	padding: 16px 8px;
+	text-align:left;
+	vertical-align: middle;
+}
+
+tr > .itemValu:nth-child(2),
+tr > .itemValu:nth-child(7)
+{
+	text-align:center;
+	vertical-align: middle;
+}
+
+tr > .itemValu:nth-child(3),
+tr > .itemValu:nth-child(4),
+tr > .itemValu:nth-child(5),
+tr > .itemValu:nth-child(6),
+tr > .itemValu:nth-child(8)
+{
+	padding: 16px 8px;
+	text-align:center;
+	vertical-align: middle;
+}
+
+tr > .itemValu:nth-child(8)
+{
+	width: 80px;
+}
+
+tr > .itemValu:nth-child(1) > div
+{
+	width: 250px;
+	height: 18px;
+	overflow:hidden;
+}
+
+.buttEdit,
+.buttDele
+{
+	padding: 0px;
+	margin: 0px;
+	font-size: 0px;
+	border-width: 0px;
+	border-radius: 3px;
+	background-color: rgba(255,255,255,0);
+	display: inline-block;
+	cursor:pointer;
+}
+
+.buttEdit > img,
+.buttDele > img
+{
+	width: 24px;
+	height: 24px;
+	padding: 0px;
+	margin: 0px;
+	cursor:pointer;
+}
+
+/* Warenkorbzusammenfassung */
+.overPaym
+{
+	width: 350px;
+	height: 180px;
+	background-color: rgba(204,204,204,1.0);
+	float: right;
+	box-shadow: 1px 1px 0px 0px rgba(32,32,32,1.0) inset;
+}
+.overPaym > .overValu:nth-child(7)
+{
+	font-weight: 600;
+}
+.overLabe
+{
+	padding: 8px 16px;
+	text-align: right;
+}
+
+.overValu
+{
+	width: 100px;
+	padding: 8px 16px;
+	float: right;
+	text-align: right;
+}
+
+/* Warenkorbzahlungsmethode */
+.paymMeth
+{
+	height: 180px;
+	text-align: center;
+	background-color: rgba(204,204,204,1.0);
+	box-shadow: 0px 1px 0px 0px rgba(32,32,32,1.0) inset;
+}
+
+.paymMeth > div:nth-child(1),
+.paymMeth > div:nth-child(2)
+{
+	line-height: 72px;
+}
+
+#addItem,
+#buyItem
+{
+	display:inline;
+}
+/*---------------------------------------------------------------------------------------------------------------------------------------------------------*/
+/* Versandinformation */
+#ship
+{
+	width: 956px;
+	margin-right: auto;
+	margin-left: auto;
+	clear: both;
+	background-color: rgba(232,232,232,1.0);
+	box-shadow: 0px 1px 0 0px rgba(0,0,0,0.3) inset;
+}
+
+#ship > div:nth-child(1)
+{
+	width: calc(100% - 150px);
+	margin-right:auto;
+	margin-left:auto;
+	text-align:right;
+}
+
+#ship > div:nth-child(2)
+{
+	/* text-align: center;
+	line-height: 257px; */
+}
+
+#ship > div > div
+{
+	clear: both;
+}
+
+#ship > div > div > .shipLabe
+{
+	width: 200px;
+	padding: 8px;
+	float: left;
+	
+}
+
+#ship > div > div > .shipValu
+{
+	padding: 8px;
+}
+
+#ship > div > div > .shipValu
+{
+	padding: 2px;
+	border-width: 1px;
+	padding: 8px;
+}
+
+#ship > div > div > .shipValu > input
+{
+	box-sizing: border-box;
+}
+
+.inpuNumA
+{
+	width: 500px;
+}
+
+.inpuNumB
+{
+	width: 248px;
+}
+
+.inpuNumC
+{
+	width: 398px;
+}
+
+.inpuNumD
+{
+	width: 98px;
+}
+/*---------------------------------------------------------------------------------------------------------------------------------------------------------*/
+/* AGB */
+.impr
+{
+	
+}
+
+
+.imprUserComm
+{
+	padding: 16px 8px;
+    text-align: center;
+	box-shadow: 0px -1px 0 0px rgba(0,0,0,0.3);
+}
+
+.imprUserComm > div
+{
+	width: calc(100% - 150px);
+	margin-right:auto;
+	margin-left:auto;
+	text-align: left;
+	line-height: 32px;
+}
+
+.imprUserComm > textarea
+{
+	width: calc(100% - 150px);
+}
+
+
+.imprUserText
+{
+	padding: 16px 8px;
+    text-align: center;
+	box-shadow: 0px -1px 0 0px rgba(0,0,0,0.3);
+}
+
+.imprUserText > div
+{
+	width: calc(100% - 150px);
+	margin-right:auto;
+	margin-left:auto;
+	text-align: left;
+	line-height: 32px;
+}
+
+.imprUserText > textarea
+{
+	width: calc(100% - 150px);
+}
+
+.imprUserChec
+{
+	padding: 16px 8px;
+    text-align: center;
+	box-shadow: 0px -1px 0 0px rgba(0,0,0,0.3);
+}
+
+
+.imprUserSubm
+{
+	padding: 16px 8px;
+    text-align: center;
+	box-shadow: 0px -1px 0 0px rgba(0,0,0,0.3);
+}
+
+/*---------------------------------------------------------------------------------------------------------------------------------------------------------*/
+.dispInliBlock
+{
+	display: inline-block;
+}
+
+textarea
+{
+	resize:none;
+}
+
+.RadioListOffset
+{
+	margin-left: 12px;
+	font-size: 12px;
+	color: #444444;
+}
