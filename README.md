@@ -30,6 +30,17 @@ All of these features are available in PHP 7.0+.
 
 **Note**: While the requirement mentions "PHP 6", PHP 6 was never officially released. The PHP version sequence went from 5.x to 7.0. This project targets PHP 7.x compatibility.
 
+### ⚠️ Security Warning
+
+**IMPORTANT**: All PHP 7.x versions (7.0 through 7.4) have reached end-of-life and no longer receive security updates:
+- PHP 7.0: EOL December 3, 2018
+- PHP 7.1: EOL December 1, 2019
+- PHP 7.2: EOL November 30, 2020
+- PHP 7.3: EOL December 6, 2021
+- PHP 7.4: EOL November 28, 2022
+
+Using an unsupported PHP version exposes your application to known security vulnerabilities. Consider upgrading to PHP 8.1 or later for security and performance improvements, or at minimum ensure your hosting environment applies necessary security patches.
+
 ## Components
 
 - **3D-Chromschrift-Generator**: Main application

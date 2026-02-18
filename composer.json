@@ -10,5 +10,6 @@
         {
             "name": "Tomi05012004"
         }
-    ]
+    ],
+    "_comment": "WARNING: PHP 7.x is end-of-life and no longer receives security updates. This version constraint is set per project requirements. Consider upgrading to PHP 8.1+ for security and performance."
 }
