@@ -92,7 +92,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 	
 	if($_POST["acti"] == "add")
 	{
-		if(intval($_POST["posi"]) > -1)
+		if(intval($_POST["posi"] ?? -1) > -1)
 		{
 			conf :: ediItem(intval($_POST["posi"]), "font", sanitize_input($_POST["font"] ?? ''));
 			conf :: ediItem(intval($_POST["posi"]), "text", sanitize_input($_POST["text"] ?? ''));
@@ -117,20 +117,20 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 	}
 	else if($_POST["acti"] == "num")
 	{
-		conf :: ediItem(intval($_POST["posi"]), "coun", intval($_POST["coun"]));
+		conf :: ediItem(intval($_POST["posi"] ?? 0), "coun", intval($_POST["coun"] ?? 1));
 		/// leite an sich selbst weiter (um Informationsdoppelsenden zu vermeiden)
 		header("Location: {$_SERVER["REQUEST_URI"]}");
 	}
 	else if($_POST["acti"] == "del")
 	{
-		conf :: delItem(intval($_POST["posi"]));
+		conf :: delItem(intval($_POST["posi"] ?? 0));
 		/// leite an sich selbst weiter (um Informationsdoppelsenden zu vermeiden)
 		header("Location: {$_SERVER["REQUEST_URI"]}");
 	}
 	/// Vaersandsland geändert
 	else if($_POST["acti"] == "lnd")
 	{
-		conf :: setLandPosi(intval($_POST["land"]));
+		conf :: setLandPosi(intval($_POST["land"] ?? 3));
 		$landData = conf :: getLandData();
 		$rapidProcessing = sanitize_boolean($_POST["rapidProcessing"] ?? false);
 		conf :: setOrderOptionValue("order.options-rapid.processing", $rapidProcessing);
@@ -236,7 +236,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 $orderID = "C-" . $count;
 		
 		// Sanitize user data
-		$landData = conf :: getLandData($_POST["firm"]);
+		$landData = conf :: getLandData();
 		$rapidProcessing = sanitize_boolean($_POST["rapidProcessing"] ?? false);
 		conf :: setOrderOptionValue("order.options-rapid.processing", $rapidProcessing);
 		
@@ -269,7 +269,7 @@ $orderID = "C-" . $count;
 	/// Artikel bearbeiten
 	else if($_POST["acti"] == "edi")
 	{
-		$itemPosi = intval($_POST["posi"]);
+		$itemPosi = intval($_POST["posi"] ?? -1);
 	}
 }
 
