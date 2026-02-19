@@ -167,7 +167,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 
 		// --- ZÄHLER LOGIK START ---
 		$counterFile = ORDER_COUNTER_FILE;
-		$currentYear = date("Y");
 		$startCount = INITIAL_ORDER_COUNTER; // Startwert falls Datei leer
 
 		// Zähler laden mit File-Locking für atomare Read-Modify-Write Operation
@@ -233,8 +232,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["acti"]))
 		flock($fp, LOCK_UN);
 		fclose($fp);
 
-		// Auftragsnummer generieren (z.B. C-2026-1001)
-$orderID = "C-" . $currentYear . "-" . $count;
+		// Auftragsnummer generieren (z.B. C-1001)
+$orderID = "C-" . $count;
 		
 		// Sanitize user data
 		$landData = conf :: getLandData($_POST["firm"]);
