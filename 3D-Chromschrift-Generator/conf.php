@@ -1027,11 +1027,20 @@ EOT;*/
   	self :: $newMail ->  AddReplyTo($replayMail, $distributor_name);
   	self :: $newMail ->  Subject 	= $mailSubj;
   	self :: $newMail -> Body 	= $mailBodySend;
-    self :: $newMail ->  addAttachment("../AGB.pdf", "AGB", "base64", "application/pdf");
-    self :: $newMail ->  addAttachment("../Datenschutz.pdf", "Datenschutz", "base64", "application/pdf");
-    self :: $newMail ->  addAttachment("../Widerruf.pdf", "Widerruf", "base64", "application/pdf");
 
     try{
+      $attachments = array(
+        __DIR__ . "/../AGB.pdf"          => "AGB",
+        __DIR__ . "/../Datenschutz.pdf"  => "Datenschutz",
+        __DIR__ . "/../Widerruf.pdf"     => "Widerruf",
+      );
+      foreach($attachments as $filePath => $fileName) {
+        if(file_exists($filePath)) {
+          self :: $newMail -> addAttachment($filePath, $fileName, "base64", "application/pdf");
+        } else {
+          error_log("Attachment file not found, skipping: " . $filePath);
+        }
+      }
       self :: $newMail ->  Send();
       $isSuccessed = true;
 
