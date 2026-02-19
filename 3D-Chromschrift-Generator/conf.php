@@ -1020,15 +1020,15 @@ EOT;*/
   	self :: $newMail ->  CharSet = $MailCharSet;
   	self :: $newMail ->  SetLanguage($mailLang);
   	self :: $newMail ->  Encoding = $MailEncoding;
-    self :: $newMail ->  AddAddress($mailTo);
 
   	self :: $newMail ->  From     = $mailfrom;
   	self :: $newMail ->  FromName = $distributor_name;
-  	self :: $newMail ->  AddReplyTo($replayMail, $distributor_name);
   	self :: $newMail ->  Subject 	= $mailSubj;
   	self :: $newMail -> Body 	= $mailBodySend;
 
     try{
+      self :: $newMail ->  AddAddress($mailTo);
+      self :: $newMail ->  AddReplyTo($replayMail, $distributor_name);
       $attachments = array(
         __DIR__ . "/../AGB.pdf"          => "AGB",
         __DIR__ . "/../Datenschutz.pdf"  => "Datenschutz",
@@ -1050,7 +1050,7 @@ EOT;*/
       self :: $newMail ->  clearAttachments();
       self :: $newMail ->  clearCustomHeaders();
     }
-    catch(Exception $e){
+    catch(\Throwable $e){
       error_log("error mail");
       error_log($e->getMessage());
       self :: $newMail ->  clearReplyTos();
@@ -1072,15 +1072,15 @@ EOT;*/
 	self :: $newMail ->  CharSet=$MailCharSet;
 	self :: $newMail ->  SetLanguage($mailLang);
 	self :: $newMail ->  Encoding = $MailEncoding;
-  self :: $newMail ->  AddAddress($mailTo);
 
 	self :: $newMail ->  From     = $mailfrom;
 	self :: $newMail ->  FromName = "";
-	self :: $newMail ->  AddReplyTo($replayMail);
 	self :: $newMail ->  Subject 	= $mailSubj;
 	self :: $newMail ->  Body 	= $mailBodySend;
 
   try{
+    self :: $newMail ->  AddAddress($mailTo);
+    self :: $newMail ->  AddReplyTo($replayMail);
     self :: $newMail ->  Send();
     $isSuccessed = true;
 
@@ -1090,7 +1090,7 @@ EOT;*/
     self :: $newMail ->  clearAttachments();
     self :: $newMail ->  clearCustomHeaders();
   }
-  catch(Exception $e){
+  catch(\Throwable $e){
     error_log("error mail");
     error_log($e->getMessage());
     self :: $newMail ->  clearReplyTos();

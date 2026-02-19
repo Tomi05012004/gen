@@ -256,8 +256,15 @@ $orderID = "C-" . $count;
 		conf :: setUserData($firm, $fnam, $lnam, $stre, $hous, $post, $city, $landData["LAND"], $phon, $emai, $comm, $paym);
 		
 		// WICHTIG: Hier übergeben wir die $orderID an die Mail-Funktion!
-		if(!conf :: senConfMess($orderID))
-		{
+		// Erhöhe Zeitlimit für den E-Mail-Versand mit großen PDF-Anhängen
+		set_time_limit(120);
+		try {
+			if(!conf :: senConfMess($orderID))
+			{
+				die("<h3>Bei dem Versenden des E-Mails ist ein Fehler aufgetreten. Bitte versuchen Sie die Seite neu zu laden oder kontaktieren Sie unsere Supportdienst.</h3>");
+			}
+		} catch(\Throwable $e) {
+			error_log("senConfMess error: " . $e->getMessage());
 			die("<h3>Bei dem Versenden des E-Mails ist ein Fehler aufgetreten. Bitte versuchen Sie die Seite neu zu laden oder kontaktieren Sie unsere Supportdienst.</h3>");
 		}
 		
@@ -922,7 +929,7 @@ EOT;
 
 
 }
-else if($site = "buy")
+else if($site == "buy")
 {
 	if($paydSucc)
 	{
