@@ -18,7 +18,7 @@ require_once("face_old.php");
 
 $face = new face("auto"); 
 
-$version = 3;
+$version = 4;
 
 // Define order counter file path
 define('ORDER_COUNTER_FILE', 'PHP/order_counter.json');
