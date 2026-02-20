@@ -18,7 +18,7 @@ require_once("face_old.php");
 
 $face = new face("auto"); 
 
-$version = 4;
+$version = 5;
 
 // Define order counter file path
 define('ORDER_COUNTER_FILE', 'PHP/order_counter.json');
@@ -518,7 +518,7 @@ EOT;
 					<ul>
 						<li><label><input id = 'foiF' type = 'radio' name = 'foil' value = '0' onclick = "optiText(this); document.getElementById('trueLengthList').style.visibility = 'hidden';">Ohne Anbringung auf Trägerfolie</label></li>
 						<br>
-						<li><label><input id = 'foiT' type = 'radio' name = 'foil' value = '1' onclick = "optiText(this); document.getElementById('trueLengthList').style.visibility = '';">Mit Anbringung auf Trägerfolie (zzgl. <span id = 'foilPric'>4.90</span> €)</label></li>
+						<li><label><input id = 'foiT' type = 'radio' name = 'foil' value = '1' onclick = "optiText(this); document.getElementById('trueLengthList').style.visibility = '';">Mit Anbringung auf Trägerfolie (<span id = 'foilCoun'>1</span> Stk., zzgl. <span id = 'foilPric'>4.90</span> €)</label></li>
 					</ul>
 					
 					<ul id = "trueLengthList">

@@ -570,6 +570,8 @@ var showCost = function()
 	// document.getElementById('foilPric').innerHTML = foilData.getFoilPric(opti.text).toFixed(2).replace(".", ",");
 	// document.getElementById('pric').innerHTML = charCost.toFixed(2).replace(".", ",");
 	
+	var foilCount = charNumb ? Math.ceil(charNumb / foilData.UNITLENG) : 1;
+	document.getElementById('foilCoun').innerHTML = foilCount;
 	document.getElementById('foilPric').innerHTML = parseInt(attachFoilPrice) ? attachFoilPrice.toFixed(2).replace(".", ",") : infoAttachFoilPrice.toFixed(2).replace(".", ",");
 	document.getElementById('truePrice').innerHTML = parseInt(trueLengthPrice) ? trueLengthPrice.toFixed(2).replace(".", ",") : infoTrueLengthPrice.toFixed(2).replace(".", ",");
 	document.getElementById('pric').innerHTML = totalPrice.toFixed(2).replace(".", ",");
