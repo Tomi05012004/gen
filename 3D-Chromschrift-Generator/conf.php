@@ -817,7 +817,7 @@ class conf
 			$userFoot .= "MBD-Brüggemann{$nl}";
 			$userFoot .= "IBAN: DE63254501100000807511{$nl}";
 			$userFoot .= "BIC: NOLADE21SWB{$nl}";
-			$userFoot .= "Bitte geben Sie bei der Überweisung Ihre Auftragsnummer an, Danke.{$nl}";
+			$userFoot .= "WICHTIG: Bitte geben Sie bei der Überweisung Ihre Auftragsnummer an, Danke.{$nl}";
 			$userFoot .= "{$nl}";
 		}
 		else if($userData["paym"] == "paypal")
