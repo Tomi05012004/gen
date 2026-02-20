@@ -788,7 +788,7 @@ class conf
 		$userHead = "";
 		$userHead .= "Hallo {$userData["fnam"]} {$userData["lnam"]},{$nl}";
 		$userHead .= "{$nl}";
-		$userHead .= "vielen Dank für Ihre Bestellung im MBD-Chromshop. Diese Artikel wurden bestellt:{$nl}";
+		$userHead .= "vielen Dank für Ihre Bestellung im MBD-Chromshop. Hier die Rechnung:{$nl}";
 		$userHead .= "{$nl}";
 
 		/// Händler
@@ -817,7 +817,7 @@ class conf
 			$userFoot .= "MBD-Brüggemann{$nl}";
 			$userFoot .= "IBAN: DE63254501100000807511{$nl}";
 			$userFoot .= "BIC: NOLADE21SWB{$nl}";
-			$userFoot .= "WICHTIG: Bitte geben Sie bei der Überweisung Ihren Bestellernamen an, Danke.{$nl}";
+			$userFoot .= "WICHTIG: Bitte geben Sie bei der Überweisung Ihre Auftragsnummer an, Danke.{$nl}";
 			$userFoot .= "{$nl}";
 		}
 		else if($userData["paym"] == "paypal")
@@ -830,7 +830,7 @@ class conf
 		}
 
 		//$userFoot .= "----------------------------------------------------------------------------{$nl}";
-		$userFoot .= "<hr>{$nl}<p><span>Eine Rechnung bekommen Sie mit der Lieferung.</span></p><br /><hr />";
+		$userFoot .= "<hr>{$nl}<p><span>Dies ist Ihre Rechnung bitte heben Sie sie auf, für die Steuer oder Nachbestellungen!</span></p><br /><hr />";
 		$userFoot .= "Mit freundlichen Grüßen{$nl}";
 		$userFoot .= "MBD-Chromshop{$nl}";
 		$userFoot .= "www.chrombeschriftung.de{$nl}";
@@ -909,7 +909,7 @@ EOT;*/
 		// $vendFoot .= "www.chrombeschriftung.de{$nl}";
 		// $vendFoot .= "{$nl}";
 
-		$userSubj = "Bestätigung Ihrer Bestellung" . ($orderID ? " " . $orderID : "");
+		$userSubj = "Bestellung" . ($orderID ? " " . $orderID : "");
 
 		$vendSubj = "Neuer Bestellvorgang" . ($orderID ? " " . $orderID : "");
 

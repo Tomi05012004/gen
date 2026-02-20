@@ -7,7 +7,7 @@ class face
 	private $itemDataName;
 	
 	private $foilEnab;
-	private $foilData = array("PRIC" => 4.90, "LENG" => 20);			/// Folienoptionen Preis pro Länge
+	private $foilData = array("PRIC" => 4.90, "LENG" => 15);			/// Folienoptionen Preis pro Länge
 	
 	private $fontEnab;
 	private $fontData;
