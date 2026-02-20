@@ -972,7 +972,7 @@ echo <<<EOT
 		<p style = "/* text-align: justify; padding-right: 20px; padding-left: 20px; */">Hier können Sie nur glänzende CHROM-Schrift bestellen, direkt und schnell.</p>
 		<p style = "padding: 0 0 8px 0;/* text-align: justify; padding-left: 20px; */">Alle anderen Größen und Farben bekommen Sie in unserem <a style=" color: #ffffff;" href = 'http://www.chrombeschriftung.de' target = '_self'>MBD-ChromShop</a> unter "Einzelbuchstaben kaufen".</p>
 		<p style = "padding: 0 0 8px 0;/* text-align: justify; padding-right: 20px; */">Der Warenkorb bleibt leer.</p>
-		<p style = "padding: 0 0 8px 0;/* text-align: justify; padding-right: 20px; padding-left: 20px; */">Lieferzeit ca. 2 Werktage</p>
+		<p style = "padding: 0 0 8px 0;/* text-align: justify; padding-right: 20px; padding-left: 20px; */">Lieferzeit 2-7 Tage</p>
 		<p style = "padding: 0 0 8px 0;/* text-align: justify; padding-right: 20px; padding-left: 20px; */">Versand ist <u>kostenlos</u> in Deutschland<br>Ins Ausland kostet es 6,90 €</p>
 		
 		<p style = "/* text-align: justify; padding-right: 20px; */">Anbringung auf Trägerfolie bedeutet:</p>
@@ -1011,7 +1011,7 @@ else
 						<p style="text-align: justify; padding-right: 20px;">Der Warenkorb bleibt leer.</p>
 					</td>
 					<td style = "vertical-align: top; width: 318px;">
-						<p style="text-align: justify; padding-right: 20px; padding-left: 20px;">Lieferzeit ca. 2 Werktage</p>
+						<p style="text-align: justify; padding-right: 20px; padding-left: 20px;">Lieferzeit 2-7 Tage</p>
 						<p style="text-align: justify; padding-right: 20px; padding-left: 20px;">Versand ist <u>kostenlos</u> in Deutschland<br>Ins Ausland kostet es 6,90 €</p>
 					</td>
 					<td style = "vertical-align: top; width: 318px;">
