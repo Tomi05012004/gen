@@ -596,7 +596,7 @@ EOT;
 					<div class = 'itemValu'>{$item["SIZE"]}</div>
 					<div style = 'clear: both'>
 					<div class = 'itemLabe'>Folie: </div>
-					<div class = 'itemValu'>{$item["FOIL"]}</div>
+					<div class = 'itemValu'>{$item["FOILDISP"]}</div>
 					<div class = 'itemLabe'>Wahre Länge: </div>
 					<div class = 'itemValu'>{$item["TRUE"]}</div>
 					<div style = 'clear: both'>
@@ -684,7 +684,7 @@ EOT;
 						</td>
 						<td class = 'itemValu'>{$item["TITL"]}</td>
 						<td class = 'itemValu'>{$item["SIZE"]} cm</td>
-						<td class = 'itemValu'>{$item["FOIL"]}</td>
+						<td class = 'itemValu'>{$item["FOILDISP"]}</td>
 						<td class = 'itemValu'>{$item["TRUE"]}</td>
 						<td class = 'itemValu'>
 							<form id = 'numItem' action = 'gene.php?mod=bsk' method = 'post'>

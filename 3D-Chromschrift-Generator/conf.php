@@ -304,6 +304,11 @@ class conf
 			$respItemList[$i]["pricfoil"] = ($respItemList[$i]["foil"]) ? (self :: getFoilPric($char, $foilPric, self::$opti["leng"])) : (0.00);
 			$respItemList[$i]["PRICFOIL"] = number_format($respItemList[$i]["pricfoil"], 2, ",", " ");
 
+			/// Anzahl der Trägerfolien
+			$respItemList[$i]["foilcoun"] = ($respItemList[$i]["foil"]) ? (intval(ceil(self :: getTextLeng($char) / self::$opti["leng"]))) : (0);
+			$respItemList[$i]["FOILCOUN"] = strval($respItemList[$i]["foilcoun"]);
+			$respItemList[$i]["FOILDISP"] = $respItemList[$i]["FOIL"] . ($respItemList[$i]["foil"] ? " ({$respItemList[$i]["FOILCOUN"]} Stk.)" : "");
+
 			/// Preis pro WahreLänge
 			$respItemList[$i]["prictrue"] = ($respItemList[$i]["true"] == "true") ? (self :: getFoilPric($char, 9.9, self::$opti["leng"])) : (0.00);
 			$respItemList[$i]["PRICTRUE"] = number_format($respItemList[$i]["prictrue"], 2, ",", " ");
@@ -657,7 +662,7 @@ class conf
 			$mailBody .= "<td>Schriftzüge: {$itemData["COUN"]}{$nl}</td>";
 			$mailBody .= "</tr>";
 			$mailBody .= "<tr>";
-			$mailBody .= "<td>Anbringung auf Trägerfolie: {$itemData["FOIL"]}{$nl}</td>";
+			$mailBody .= "<td>Anbringung auf Trägerfolie: {$itemData["FOILDISP"]}{$nl}</td>";
 			$mailBody .= "</tr>";
 			$mailBody .= "<tr>";
 			$mailBody .= "<td>Wahre Länge: {$itemData["TRUE"]}{$nl}</td>";
